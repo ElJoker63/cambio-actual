@@ -37,7 +37,7 @@ pip install flet
 Para ejecutar la aplicación, navega al directorio del proyecto y ejecuta:
 
 ```plaintext
-python main.py
+flet run
 ```
 
 La aplicación se iniciará en modo oscuro predeterminado y muestra la vista principal de cambio de moneda.
