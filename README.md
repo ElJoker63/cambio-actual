@@ -11,7 +11,6 @@ A real-time currency exchange rate and cryptocurrency price viewer built with Fl
 - Easy navigation between views
 - Reference information display
 
-
 ## Prerequisites
 
 - Python 3.7 or higher
@@ -21,10 +20,14 @@ A real-time currency exchange rate and cryptocurrency price viewer built with Fl
 ## Installation
 
 1. Clone the repository:
-```git clone https://github.com/ElJoker63/cambio-actual```
+```
+git clone https://github.com/ElJoker63/cambio-actual
+```
 
 2. Install the required dependencies:
-```pip install -r requirements.txt```
+```
+pip install -r requirements.txt
+```
 
 3. 3. Make sure you have the following assets in your project structure:
 
@@ -35,7 +38,9 @@ A real-time currency exchange rate and cryptocurrency price viewer built with Fl
 ## Running the Application
 To run the application, navigate to the project directory and execute:
 
-```flet run```
+```
+flet run
+```
 
 The application will start in dark mode by default and display the main currency exchange view.
 
@@ -67,3 +72,8 @@ Copyright (c) 2024 AEWareDevs
 ## Links
 
 - GitHub: [https://github.com/ElJoker63/cambio-actual](https://github.com/ElJoker63/cambio-actual)
+- Telegram: [@ElJoker63](https://t.me/ElJoker63)
+
+## Disclaimer
+
+The exchange rates shown in this application are reference values calculated from informal market data. They are not official rates and should be taken only as a reference. The final price of private buying and selling may vary.
