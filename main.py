@@ -3,7 +3,8 @@ from api_toque import get_compra, get_venta, get_msg, get_crypto
 from api import *
 
 APP_NAME = "CAMBIO ACTUAL"
-VERSION = '0.0.2'
+VERSION = '0.0.1'
+remote = ''
 
 class CoinExchangeApp:
     def __init__(self):
@@ -35,7 +36,7 @@ class CoinExchangeApp:
             content=ft.Column(
                 controls=[
                     ft.Divider(height=40, color=ft.colors.TRANSPARENT),
-                    ft.Row([ft.Image(src="/Update.svg", width=35, color=ft.colors.PRIMARY)], alignment=ft.MainAxisAlignment.CENTER),
+                    ft.Row([ft.Image(src=f"{remote}/Update.svg", width=35, color=ft.colors.PRIMARY)], alignment=ft.MainAxisAlignment.CENTER),
                     ft.Row([ft.Text(f'Descargas: {get_update()[4]}', color=ft.colors.PRIMARY)], alignment=ft.MainAxisAlignment.CENTER),
                     ft.Divider(height=40, color=ft.colors.TRANSPARENT),
                     ft.Markdown(get_update()[1]),
@@ -67,15 +68,15 @@ class CoinExchangeApp:
                     ft.Row([
                         ft.TextButton(content=
                                     ft.Row([
-                                        ft.Image(src="/Octocat.svg", height=24, width=24, color=ft.colors.PRIMARY),
+                                        ft.Image(src=f"{remote}/Octocat.svg", height=24, width=24, color=ft.colors.PRIMARY),
                                         ft.Text("GitHub",font_family="Qs-B")]),url=(f"https://github.com/ElJoker63/cambio-actual")),
                         ft.TextButton(content=
                                     ft.Row([
-                                        ft.Image(src="/Telegram.svg", height=24, width=24, color=ft.colors.PRIMARY),
+                                        ft.Image(src=f"{remote}/Telegram.svg", height=24, width=24, color=ft.colors.PRIMARY),
                                         ft.Text("Telegram",font_family="Qs-B")]),url=(f"https://t.me/ElJoker63"))], alignment=ft.MainAxisAlignment.CENTER),
                     ft.Row([ft.TextButton(content=
                                     ft.Row([
-                                        ft.Image(src="/lol.png", height=24, width=24, color=ft.colors.PRIMARY),
+                                        ft.Image(src=f"{remote}/lol.png", height=24, width=24, color=ft.colors.PRIMARY),
                                         ft.Text("ByteBloom",font_family="Qs-B")]),url=(f"https://t.me/+z771oePMvc44NDI5"))], alignment=ft.MainAxisAlignment.CENTER),
                 ],
                 tight=True,
@@ -139,7 +140,7 @@ class CoinExchangeApp:
             title=ft.Row([ft.Text(title, color=ft.colors.WHITE, font_family="Qs-B")], alignment=ft.MainAxisAlignment.CENTER),
             actions=[
                 ft.PopupMenuButton(
-                    icon_color="#ffffff",
+                    icon_color=ft.colors.WHITE,
                     items=menu_items
                 ),
             ],
@@ -160,11 +161,11 @@ class CoinExchangeApp:
             ),
         )
         self.page.fonts = {
-            "Qs-B": "/fonts/Quicksand-Bold.ttf",
-            "Qs-L": "/fonts/Quicksand-Light.ttf",
-            "Qs-M": "/fonts/Quicksand-Medium.ttf",
-            "Qs-R": "/fonts/Quicksand-Regular.ttf",
-            "Qs-SB": "/fonts/Quicksand-SemiBold.ttf",
+            "Qs-B": f"{remote}/fonts/Quicksand-Bold.ttf",
+            "Qs-L": f"{remote}/fonts/Quicksand-Light.ttf",
+            "Qs-M": f"{remote}/fonts/Quicksand-Medium.ttf",
+            "Qs-R": f"{remote}/fonts/Quicksand-Regular.ttf",
+            "Qs-SB": f"{remote}/fonts/Quicksand-SemiBold.ttf",
         }
 
         self.page.client_storage.set("coins", ["USD", "ECU", "MLC", "BTC"])
@@ -189,7 +190,7 @@ class CoinExchangeApp:
                             [
                                 ft.ListTile(
                                     leading=ft.Image(
-                                        src=f"/{coin}.png",
+                                        src=f"{remote}/{coin}.png",
                                         width=48,
                                         height=48,
                                         color=ft.colors.PRIMARY,
@@ -223,7 +224,7 @@ class CoinExchangeApp:
                             [
                                 ft.ListTile(
                                     leading=ft.Image(
-                                        f"/{ms['symbol']}.png",
+                                        f"{remote}/{ms['symbol']}.png",
                                         color=ft.colors.PRIMARY,
                                     ),
                                     title=ft.Text(
