@@ -5,7 +5,10 @@
 Un visualizador de tipos de cambio de divisas y precios de criptomonedas en tiempo real creado con Flet. Esta aplicación proporciona información actualizada sobre diversos tipos de cambio de divisas y precios de criptomonedas utilizando datos de ElToque.
 
 ## Descarga
-[![img](https://raw.githubusercontent.com/ElJoker63/cambio-actual/refs/heads/main/screenshots/windows.png)](https://github.com/ElJoker63/cambio-actual/blob/main/app/Cambio%20Actual_0.0.2_202411051-windows-amd64.zip)[![img](https://raw.githubusercontent.com/ElJoker63/cambio-actual/refs/heads/main/screenshots/android.png)](https://github.com/ElJoker63/cambio-actual/releases/download/v0.0.2/app-release.apk)
+<div align="center">
+    <a href="https://github.com/ElJoker63/cambio-actual/blob/main/app/Cambio%20Actual_0.0.2_202411051-windows-amd64.zip"><img src="https://raw.githubusercontent.com/ElJoker63/cambio-actual/refs/heads/main/screenshots/windows.png"></a><a href="https://github.com/ElJoker63/cambio-actual/releases/download/v0.0.2/app-release.apk"><img src="https://raw.githubusercontent.com/ElJoker63/cambio-actual/refs/heads/main/screenshots/android.png"></a><br>
+<img src="https://img.shields.io/github/downloads/ElJoker63/cambio-actual/total?style=for-the-badge&label=Descargas&color=blue">
+</div>
 
 ## Características
 
