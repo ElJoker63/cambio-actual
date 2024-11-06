@@ -35,7 +35,7 @@ class CoinExchangeApp:
             content=ft.Column(
                 controls=[
                     ft.Divider(height=40, color=ft.colors.TRANSPARENT),
-                    ft.Row([ft.Image(src="http://192.168.1.2:5500/assets/Update.svg", width=35, color=ft.colors.PRIMARY)], alignment=ft.MainAxisAlignment.CENTER),
+                    ft.Row([ft.Image(src="/Update.svg", width=35, color=ft.colors.PRIMARY)], alignment=ft.MainAxisAlignment.CENTER),
                     ft.Row([ft.Text(f'Descargas: {get_update()[4]}', color=ft.colors.PRIMARY)], alignment=ft.MainAxisAlignment.CENTER),
                     ft.Divider(height=40, color=ft.colors.TRANSPARENT),
                     ft.Markdown(get_update()[1]),
@@ -67,15 +67,15 @@ class CoinExchangeApp:
                     ft.Row([
                         ft.TextButton(content=
                                     ft.Row([
-                                        ft.Image(src="http://192.168.1.2:5500/assets/Octocat.svg", height=24, width=24, color=ft.colors.PRIMARY),
+                                        ft.Image(src="/Octocat.svg", height=24, width=24, color=ft.colors.PRIMARY),
                                         ft.Text("GitHub",font_family="Qs-B")]),url=(f"https://github.com/ElJoker63/cambio-actual")),
                         ft.TextButton(content=
                                     ft.Row([
-                                        ft.Image(src="http://192.168.1.2:5500/assets/Telegram.svg", height=24, width=24, color=ft.colors.PRIMARY),
+                                        ft.Image(src="/Telegram.svg", height=24, width=24, color=ft.colors.PRIMARY),
                                         ft.Text("Telegram",font_family="Qs-B")]),url=(f"https://t.me/ElJoker63"))], alignment=ft.MainAxisAlignment.CENTER),
                     ft.Row([ft.TextButton(content=
                                     ft.Row([
-                                        ft.Image(src="http://192.168.1.2:5500/assets/lol.png", height=24, width=24, color=ft.colors.PRIMARY),
+                                        ft.Image(src="/lol.png", height=24, width=24, color=ft.colors.PRIMARY),
                                         ft.Text("ByteBloom",font_family="Qs-B")]),url=(f"https://t.me/+z771oePMvc44NDI5"))], alignment=ft.MainAxisAlignment.CENTER),
                 ],
                 tight=True,
@@ -160,11 +160,11 @@ class CoinExchangeApp:
             ),
         )
         self.page.fonts = {
-            "Qs-B": "http://192.168.1.2:5500/assets/fonts/Quicksand-Bold.ttf",
-            "Qs-L": "http://192.168.1.2:5500/assets/fonts/Quicksand-Light.ttf",
-            "Qs-M": "http://192.168.1.2:5500/assets/fonts/Quicksand-Medium.ttf",
-            "Qs-R": "http://192.168.1.2:5500/assets/fonts/Quicksand-Regular.ttf",
-            "Qs-SB": "http://192.168.1.2:5500/assets/fonts/Quicksand-SemiBold.ttf",
+            "Qs-B": "/fonts/Quicksand-Bold.ttf",
+            "Qs-L": "/fonts/Quicksand-Light.ttf",
+            "Qs-M": "/fonts/Quicksand-Medium.ttf",
+            "Qs-R": "/fonts/Quicksand-Regular.ttf",
+            "Qs-SB": "/fonts/Quicksand-SemiBold.ttf",
         }
 
         self.page.client_storage.set("coins", ["USD", "ECU", "MLC", "BTC"])
@@ -189,7 +189,7 @@ class CoinExchangeApp:
                             [
                                 ft.ListTile(
                                     leading=ft.Image(
-                                        src=f"http://192.168.1.2:5500/assets/{coin}.png",
+                                        src=f"/{coin}.png",
                                         width=48,
                                         height=48,
                                         color=ft.colors.PRIMARY,
@@ -223,7 +223,7 @@ class CoinExchangeApp:
                             [
                                 ft.ListTile(
                                     leading=ft.Image(
-                                        f"http://192.168.1.2:5500/assets/{ms['symbol']}.png",
+                                        f"/{ms['symbol']}.png",
                                         color=ft.colors.PRIMARY,
                                     ),
                                     title=ft.Text(
