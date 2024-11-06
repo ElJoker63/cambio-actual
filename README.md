@@ -5,7 +5,7 @@
 A real-time currency exchange rate and cryptocurrency price viewer built with Flet. This application provides up-to-date information on various currency exchange rates and cryptocurrency prices using data from ElToque.
 
 ## Download
-[![img](https://raw.githubusercontent.com/ElJoker63/cambio-actual/refs/heads/main/screenshots/windows.svg)](https://github.com/ElJoker63/cambio-actual/blob/main/app/Cambio%20Actual_0.0.2_202411051-windows-amd64.zip)[![img](https://raw.githubusercontent.com/ElJoker63/cambio-actual/refs/heads/main/screenshots/android.tgs)](https://github.com/ElJoker63/cambio-actual/releases/download/v0.0.2/app-release.apk)
+[![img](https://raw.githubusercontent.com/ElJoker63/cambio-actual/refs/heads/main/screenshots/windows.png)](https://github.com/ElJoker63/cambio-actual/blob/main/app/Cambio%20Actual_0.0.2_202411051-windows-amd64.zip)[![img](https://raw.githubusercontent.com/ElJoker63/cambio-actual/refs/heads/main/screenshots/android.png)](https://github.com/ElJoker63/cambio-actual/releases/download/v0.0.2/app-release.apk)
 
 ## Features
 
