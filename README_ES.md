@@ -1,4 +1,7 @@
+# `<img src='screenshots/1.jpg' width=70><img src='screenshots/2.jpg' width=70><img src='screenshots/3.jpg' width=70><img src='screenshots/4.jpg' width=70>`
+
 # Cambio Actual
+
 Un visualizador de tipos de cambio de divisas y precios de criptomonedas en tiempo real creado con Flet. Esta aplicación proporciona información actualizada sobre diversos tipos de cambio de divisas y precios de criptomonedas utilizando datos de ElToque.
 
 ## Características
@@ -11,11 +14,13 @@ Un visualizador de tipos de cambio de divisas y precios de criptomonedas en tiem
 - Visualización de información de referencia
 
 ## Requisitos previos
+
 - Python 3.7 o superior
 - Biblioteca Flet
 - Conexión a Internet para acceso a la API
 
 ## Instalación
+
 1. Clona el repositorio:
 
 ```plaintext
@@ -27,10 +32,10 @@ git clone https://github.com/ElJoker63/cambio-actual
 ```plaintext
 pip install flet
 ```
-3. Asegúrate de tener los siguientes activos en la estructura de tu proyecto:
 
-1. `/assets/fonts/` - Contiene archivos de la familia de fuentes Quicksand
-2. `/assets/` - Contiene íconos de monedas y criptomonedas
+3. Asegúrate de tener los siguientes activos en la estructura de tu proyecto:
+4. `/assets/fonts/` - Contiene archivos de la familia de fuentes Quicksand
+5. `/assets/` - Contiene íconos de monedas y criptomonedas
 
 ## Ejecutar la aplicación
 
@@ -47,7 +52,6 @@ La aplicación se iniciará en modo oscuro predeterminado y muestra la vista pri
 - `main.py` - Archivo principal de la aplicación que contiene la interfaz de usuario y la lógica
 - `api_toque.py` - Integración de API para obtener tipos de cambio y precios de criptomonedas
 - `/assets/` - Directorio que contiene imágenes y fuentes
-
 - `/assets/fonts/` - Archivos de la familia de fuentes Quicksand
 - Íconos de moneda y criptomoneda (formato PNG)
 
@@ -59,14 +63,18 @@ La aplicación se iniciará en modo oscuro predeterminado y muestra la vista pri
 - Haga clic en el ícono de información para ver los detalles y enlaces de la aplicación
 
 ## Versión
-Versión actual: 0.0.1
+
+Versión actual: 0.0.2
 
 ## Licencia
-Copyright (c) 2024 AEWareDevs
+
+Free
 
 ## Enlaces
+
 - GitHub: [https://github.com/ElJoker63/cambio-actual](https://github.com/ElJoker63/cambio-actual)
 - Telegram: [@ElJoker63](https://t.me/ElJoker63)
 
 ## Aviso legal
+
 Los tipos de cambio que se muestran en esta aplicación son valores de referencia calculados a partir de datos del mercado informal. No son tipos oficiales y deben tomarse solo como referencia. El precio final de compra y venta privada puede variar.
