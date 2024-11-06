@@ -1,6 +1,11 @@
+<img src='screenshots/1.jpg' width=70><img src='screenshots/2.jpg' width=70><img src='screenshots/3.jpg' width=70><img src='screenshots/4.jpg' width=70>
+
 # Cambio Actual
 
 A real-time currency exchange rate and cryptocurrency price viewer built with Flet. This application provides up-to-date information on various currency exchange rates and cryptocurrency prices using data from ElToque.
+
+## Download
+[![img](https://raw.githubusercontent.com/ElJoker63/cambio-actual/refs/heads/main/screenshots/windows.svg)](https://github.com/ElJoker63/cambio-actual/blob/main/app/Cambio%20Actual_0.0.2_202411051-windows-amd64.zip)[![img](https://raw.githubusercontent.com/ElJoker63/cambio-actual/refs/heads/main/screenshots/android.tgs)](https://github.com/ElJoker63/cambio-actual/releases/download/v0.0.2/app-release.apk)
 
 ## Features
 
@@ -20,22 +25,23 @@ A real-time currency exchange rate and cryptocurrency price viewer built with Fl
 ## Installation
 
 1. Clone the repository:
+
 ```
 git clone https://github.com/ElJoker63/cambio-actual
 ```
 
 2. Install the required dependencies:
+
 ```
 pip install -r requirements.txt
 ```
 
-3. 3. Make sure you have the following assets in your project structure:
-
-1. `/assets/fonts/` - Contains Quicksand font family files
-2. `/assets/` - Contains currency and cryptocurrency icons
-
+3. Make sure you have the following assets in your project structure:
+4. `/assets/fonts/` - Contains Quicksand font family files
+5. `/assets/` - Contains currency and cryptocurrency icons
 
 ## Running the Application
+
 To run the application, navigate to the project directory and execute:
 
 ```
@@ -49,7 +55,6 @@ The application will start in dark mode by default and display the main currency
 - `main.py` - Main application file containing the UI and logic
 - `api_toque.py` - API integration for fetching exchange rates and crypto prices
 - `/assets/` - Directory containing images and fonts
-
 - `/assets/fonts/` - Quicksand font family files
 - Currency and cryptocurrency icons (PNG format)
 
@@ -60,14 +65,13 @@ The application will start in dark mode by default and display the main currency
 - Click the home icon to return to the main view
 - Click the information icon to view app details and links
 
-
 ## Version
 
-Current version: 0.0.1
+Current version: 0.0.2
 
 ## License
 
-Copyright (c) 2024 AEWareDevs
+Free
 
 ## Links
 
