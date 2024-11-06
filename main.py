@@ -3,7 +3,7 @@ from api_toque import get_compra, get_venta, get_msg, get_crypto
 from api import *
 
 APP_NAME = "CAMBIO ACTUAL"
-VERSION = '0.0.1'
+VERSION = '0.0.3'
 remote = ''
 
 class CoinExchangeApp:
