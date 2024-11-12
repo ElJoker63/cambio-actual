@@ -1,6 +1,7 @@
 import flet as ft
 from api_toque import get_compra, get_venta, get_msg, get_crypto
 from api import *
+import threading
 
 APP_NAME = "CAMBIO ACTUAL"
 VERSION = '0.0.3'
@@ -11,42 +12,45 @@ class CoinExchangeApp:
         self.page = None
         self.xcoin = ft.ListView(expand=True, auto_scroll=False)
         self.msg = ft.ListView(expand=True, auto_scroll=False)
+        self.info_update = get_update()
+        
+        texto = f"Los valores de REFERENCIA que aquí se muestran son el resultado del cálculo de la mediana de los números escritos en ofertas de compra y venta de divisas registradas por nuestro sistema automatizado en sitios web de clasificados y grupos de redes sociales. No son operaciones concretadas,a sino expresiones «deseos» de los actores del mercado informal. El precio final de la compraventa entre privados puede y suele variar. Insistimos en que los números que mostramos no son la tasa OFICIAL, sino que deben ser tomados solo como REFERENCIA."
         
         self.reference = ft.Card(
             content=ft.Container(
                 content=ft.Column(
                     [
                         ft.ListTile(
-                            subtitle=ft.Text(
-                                f"Los valores de REFERENCIA que aquí se muestran son el resultado del cálculo de la mediana de los números escritos en ofertas de compra y venta de divisas registradas por nuestro sistema automatizado en sitios web de clasificados y grupos de redes sociales. No son operaciones concretadas,a sino expresiones «deseos» de los actores del mercado informal. El precio final de la compraventa entre privados puede y suele variar. Insistimos en que los números que mostramos no son la tasa OFICIAL, sino que deben ser tomados solo como REFERENCIA.",
-                                color=ft.colors.RED,
-                                size=10,
-                                font_family="Qs-M",
+                            subtitle=ft.ElevatedButton(
+                                f"LEER",
+                                color=ft.colors.WHITE,
+                                bgcolor=ft.colors.PRIMARY,
+                                on_click=lambda _: self.page.open(self.dis_modal)
                             ),
                         ),
                     ]
                 ),
                 padding=0,
-            )
+            ), color=ft.colors.SECONDARY
         )
         
         self.update_modal = ft.CupertinoAlertDialog(
             modal=True,
-            title=ft.Text(f"ACTUALIZACIÓN {get_update()[2]}", font_family="Qs-B", size=20, color=ft.colors.PRIMARY),
+            title=ft.Text(f"ACTUALIZACIÓN {self.info_update[2]}", font_family="Qs-B", size=20, color=ft.colors.PRIMARY),
             content=ft.Column(
                 controls=[
                     ft.Divider(height=40, color=ft.colors.TRANSPARENT),
                     ft.Row([ft.Image(src=f"{remote}/Update.svg", width=35, color=ft.colors.PRIMARY)], alignment=ft.MainAxisAlignment.CENTER),
-                    ft.Row([ft.Text(f'Descargas: {get_update()[4]}', color=ft.colors.PRIMARY)], alignment=ft.MainAxisAlignment.CENTER),
+                    ft.Row([ft.Text(f'Descargas: {self.info_update[4]}', color=ft.colors.PRIMARY)], alignment=ft.MainAxisAlignment.CENTER),
                     ft.Divider(height=40, color=ft.colors.TRANSPARENT),
-                    ft.Markdown(get_update()[1]),
+                    ft.Markdown(self.info_update[1]),
                     ft.Divider(height=40, color=ft.colors.TRANSPARENT),
                 ],
                 tight=True,
                 spacing=0,
             ),
             actions=[
-                ft.TextButton("ACTUALIZAR", url=get_update()[3]),
+                ft.TextButton("ACTUALIZAR", url=self.info_update[3]),
             ],
         )
 
@@ -86,6 +90,24 @@ class CoinExchangeApp:
                 ft.TextButton("CERRAR", on_click=handle_close),
             ],
         )
+        
+        def dis_close(e):
+            self.page.close(self.dis_modal)
+
+        self.dis_modal = ft.CupertinoAlertDialog(
+            modal=True,
+            content=ft.Column(
+                controls=[
+                    ft.Text(texto, size=14, color=ft.colors.RED, text_align='center')
+                ],
+                tight=True,
+                spacing=0,
+            ),
+            actions=[
+                ft.TextButton("CERRAR", on_click=dis_close),
+            ],
+        )
+        
         self.wv = ft.WebView("https://img.cambiocuba.money/calculator/fiat", expand=True)
 
     def create_app_bar(self, title):
@@ -152,12 +174,13 @@ class CoinExchangeApp:
         self.page.title = APP_NAME
         self.page.theme_mode = ft.ThemeMode.DARK
         self.page.scroll = ft.ScrollMode.HIDDEN
+        #self.page.bgcolor = "#202020"
         self.page.theme = ft.Theme(
             font_family="Qs-L",
             color_scheme=ft.ColorScheme(
                 primary=ft.colors.GREEN,
-                secondary=ft.colors.GREEN_ACCENT,
-                background=ft.colors.SECONDARY,
+                secondary="#2E2E2E",
+                background="#202020",
             ),
         )
         self.page.fonts = {
@@ -168,11 +191,8 @@ class CoinExchangeApp:
             "Qs-SB": f"{remote}/fonts/Quicksand-SemiBold.ttf",
         }
 
-        self.page.client_storage.set("coins", ["USD", "ECU", "MLC", "BTC"])
+        self.coins = ["USD", "ECU", "MLC", "BTC"]
         self.float_button = ft.FloatingActionButton(icon=ft.icons.UPDATE, on_click=lambda _: self.page.update(), bgcolor=ft.colors.PRIMARY)
-
-        self.update_coin_list()
-        self.update_msg_list()
 
         self.page.on_route_change = self.route_change
         self.page.on_view_pop = self.view_pop
@@ -180,7 +200,7 @@ class CoinExchangeApp:
 
     def update_coin_list(self):
         self.xcoin.controls.clear()
-        for coin in self.page.client_storage.get("coins"):
+        for coin in self.coins:
             compra = get_compra(coin)
             venta = get_venta(coin)
             self.xcoin.controls.append(
@@ -193,27 +213,28 @@ class CoinExchangeApp:
                                         src=f"{remote}/{coin}.png",
                                         width=48,
                                         height=48,
-                                        color=ft.colors.PRIMARY,
+                                        color=ft.colors.WHITE,
                                     ),
                                     title=ft.Text(
                                         f"{coin if coin != 'ECU' else 'EURO'}",
                                         font_family="Qs-B",
-                                        color=ft.colors.PRIMARY,
+                                        color=ft.colors.WHITE,
                                     ),
                                     subtitle=ft.Text(
                                         f"COMPRA: {compra} | VENTA: {venta}",
                                         font_family="Qs-M",
-                                        color=ft.colors.PRIMARY,
+                                        color=ft.colors.WHITE,
                                     ),
                                 ),
                             ]
                         ),
                         padding=0,
                     )
-                )
+                , color=ft.colors.SECONDARY)
             )
+        self.page.update()
 
-    def update_msg_list(self):
+    def update_crypto_coins(self):
         self.msg.controls.clear()
         msg = get_crypto()
         for ms in msg["crypto_market_cap"]:
@@ -225,34 +246,35 @@ class CoinExchangeApp:
                                 ft.ListTile(
                                     leading=ft.Image(
                                         f"{remote}/{ms['symbol']}.png",
-                                        color=ft.colors.PRIMARY,
+                                        color=ft.colors.WHITE,
                                     ),
                                     title=ft.Text(
                                         f"{ms['symbol']}",
-                                        color=ft.colors.PRIMARY,
+                                        color=ft.colors.WHITE,
                                         font_family="Qs-B"
                                     ),
                                     subtitle=ft.Text(
-                                        f"{round(ms['price'], 2)}",
+                                        f"{round(ms['price'], 2)} USD",
                                         font_family="Qs-M", 
-                                        color=ft.colors.PRIMARY,
+                                        color=ft.colors.WHITE,
                                     ),
                                 ),
                             ]
                         ),
                         padding=0,
-                    )
+                    ), color='#2E2E2E',
                 )
             )
-
-    def route_change(self, route):
+        self.page.update()
+        
+    def check_version_app(self):
         update_info = get_update()
         current_version = VERSION
         latest_version = update_info[2].replace('v', '')
-
         if compare_versions(current_version, latest_version) == -1:
             self.page.open(self.update_modal)
 
+    def route_change(self, route):
         self.page.views.clear()
         
         # Vista principal
@@ -264,9 +286,10 @@ class CoinExchangeApp:
                         self.create_app_bar(APP_NAME),
                         self.xcoin,
                         self.reference,
-                    ],
+                    ], bgcolor="#202020",
                 )
             )
+            threading.Thread(target=self.update_coin_list()).start()
         
         # Vista de crypto
         elif self.page.route == "/crypto":
@@ -275,10 +298,12 @@ class CoinExchangeApp:
                     "/crypto",
                     [
                         self.create_app_bar("CRYPTOCOINS"),
-                        self.msg,
-                    ],
+                        self.msg,                        
+                        self.reference,
+                    ], bgcolor="#202020",
                 )
             )
+            threading.Thread(target=self.update_crypto_coins()).start()
         
         # Vista de CONVERTIDOR
         elif self.page.route == "/calc":
@@ -288,10 +313,11 @@ class CoinExchangeApp:
                     [
                         self.create_app_bar("CONVERTIDOR"),
                         self.wv,
-                    ],
+                        self.reference,
+                    ], bgcolor="#202020",
                 )
             )
-
+        threading.Thread(target=self.check_version_app()).start()
         self.page.update()
 
     def view_pop(self, view):

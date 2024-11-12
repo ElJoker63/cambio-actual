@@ -6,8 +6,10 @@ def compare_versions(version1, version2):
     v2_parts = [int(part) for part in version2.split('.')]
     for v1, v2 in zip(v1_parts, v2_parts):
         if v1 < v2:
+            print('HAY UPDATE')
             return -1
         elif v1 > v2:
+            print('NO HAY UPDATE')
             return 1
     return 0
 
