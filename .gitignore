@@ -3,3 +3,4 @@
 /build
 BUILD.cmd
 *.pyc
+views/home.py
