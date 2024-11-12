@@ -77,7 +77,7 @@ class CoinExchangeApp:
                         ft.TextButton(content=
                                     ft.Row([
                                         ft.Image(src=f"{remote}/Telegram.svg", height=24, width=24, color=ft.colors.PRIMARY),
-                                        ft.Text("Telegram",font_family="Qs-B")]),url=(f"https://t.me/ElJoker63"))], alignment=ft.MainAxisAlignment.CENTER),
+                                        ft.Text("Telegram",font_family="Qs-B")]),url=(f"https://t.me/cambioactualapk"))], alignment=ft.MainAxisAlignment.CENTER),
                     ft.Row([ft.TextButton(content=
                                     ft.Row([
                                         ft.Image(src=f"{remote}/lol.png", height=24, width=24, color=ft.colors.PRIMARY),
