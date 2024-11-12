@@ -170,12 +170,6 @@ jobs:
           echo "Artifacts Directory After Zipping:"
           ls -la artifacts/
 
-
-      - name: List Workspace After Zipping
-        run: |
-          echo "Artifacts Directory After Zipping:"
-          ls -la artifacts/
-
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v1
         with:
