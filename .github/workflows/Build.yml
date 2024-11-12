@@ -16,11 +16,11 @@ on:
   workflow_dispatch:
 
 env:
-  BUILD_NUMBER: 202411011
-  BUILD_VERSION: 0.0.1
+  BUILD_NUMBER: 202411121
+  BUILD_VERSION: 0.0.3
   PYTHON_VERSION: 3.12.2
   FLUTTER_VERSION: 3.24.4
-  APP_NAME: "GroqCloud"
+  APP_NAME: "Cambio Actual"
 
 jobs:
   build-linux:
