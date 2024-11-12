@@ -1,0 +1,223 @@
+name: Desktop and Mobile Build (Linux, macOS, Windows, Android)
+
+on:
+  # Runs on push to any of the below branches
+  #push:
+  #  branches:
+  #    - master
+  #    - main
+  # Runs on pull request events that target one of the below branches
+  #pull_request:
+  #  branches:
+  #    - master
+  #    - main
+
+  # Allows you to run this workflow manually from the Actions tab of the repository
+  workflow_dispatch:
+
+env:
+  BUILD_NUMBER: 202411011
+  BUILD_VERSION: 0.0.1
+  PYTHON_VERSION: 3.12.2
+  FLUTTER_VERSION: 3.24.4
+  APP_NAME: "GroqCloud"
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install Python Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Setup Flutter ${{ env.FLUTTER_VERSION }}
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+
+      - name: Patch for linux build
+        run: |
+          flutter doctor
+          sudo apt-get update -y
+          sudo apt-get install -y ninja-build libgtk-3-dev
+          flutter doctor
+
+      - name: Flet Build Linux
+        run: |
+          flutter config --no-analytics 
+          flet build linux --no-rich-output --product "${{ env.APP_NAME }}" --org "com.aewaredev" --build-number "${{ env.BUILD_NUMBER }}" --build-version "${{ env.BUILD_VERSION }}" --verbose
+
+      - name: Upload Linux Artifact
+        uses: actions/upload-artifact@v4.3.4
+        with:
+          name: flet-linux
+          path: build/linux
+          if-no-files-found: warn
+          overwrite: false
+
+  build-macos:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install Python Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Setup Flutter ${{ env.FLUTTER_VERSION }}
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+
+      - name: Flet Build macOS
+        run: |
+          flutter config --no-analytics
+          flet build macos --no-rich-output --product "${{ env.APP_NAME }}" --org "com.aewaredev" --build-number "${{ env.BUILD_NUMBER }}" --build-version "${{ env.BUILD_VERSION }}" --verbose
+
+      - name: Upload macOS Artifact
+        uses: actions/upload-artifact@v4.3.4
+        with:
+          name: flet-macos
+          path: build/macos
+          if-no-files-found: warn
+          overwrite: false
+
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install Python Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Setup Flutter ${{ env.FLUTTER_VERSION }}
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+
+      - name: Flet Build Windows
+        run: |
+          flutter config --no-analytics
+          flet build windows --no-rich-output --product "${{ env.APP_NAME }}" --org "com.aewaredev" --build-number "${{ env.BUILD_NUMBER }}" --build-version "${{ env.BUILD_VERSION }}" --verbose
+
+      - name: Upload Windows Artifact
+        uses: actions/upload-artifact@v4.3.4
+        with:
+          name: flet-windows
+          path: build/windows
+          if-no-files-found: warn
+          overwrite: false
+
+  create-release:
+    needs: [build-linux, build-macos, build-windows]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }} #GitHub Token
+        with:
+          tag_name: v${{ env.BUILD_VERSION }}
+          release_name: Release v${{ env.BUILD_VERSION }}
+          body: |
+            🚀 #Nueva actualizacion ${{ env.BUILD_VERSION }}
+            **Versión:** v${{ env.BUILD_VERSION }}
+            **Revisión:** ${{ env.BUILD_NUMBER }}
+
+            [💻WINDOWS](https://github.com/${{ github.repository }}/releases/download/v${{ env.BUILD_VERSION }}/windows.zip)
+            [🐧LINUX](https://github.com/${{ github.repository }}/releases/download/v${{ env.BUILD_VERSION }}/linux.zip)
+            [🍏MACOS](https://github.com/${{ github.repository }}/releases/download/v${{ env.BUILD_VERSION }}/macos.zip)
+            [🤖ANDROID](https://github.com/${{ github.repository }}/releases/download/v${{ env.BUILD_VERSION }}/app-release.apk)
+          draft: false
+          prerelease: false
+
+      - name: Zip Artifacts
+        run: |
+          cd artifacts
+          zip -r linux.zip flet-linux/
+          zip -r macos.zip flet-macos/
+          zip -r windows.zip flet-windows/
+
+      - name: List Workspace After Zipping
+        run: |
+          echo "Artifacts Directory After Zipping:"
+          ls -la artifacts/
+
+      - name: List apk-artifactv
+        run: |
+          echo "List apk-artifactv:"
+          ls -la artifacts/apk-artifact
+
+      - name: Upload Release Assets
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            artifacts/linux.zip
+            artifacts/macos.zip
+            artifacts/windows.zip
+            artifacts/apk-artifact/app-release.apk
+
+          tag_name: v${{ env.BUILD_VERSION }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+      
+      - name: send message to channel
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM }}
+          token: ${{ secrets.BOT }}
+          message: |
+            Nueva actualizacion ${{ env.APP_NAME}}
+            *Versión:* ${{ env.BUILD_VERSION }}
+            *Revisión:* ${{ env.BUILD_NUMBER }}
+            
+            🐧 En esta nueva version:
+            - Se ha cambiado completamente la tecnologia de la app.
+            - Se ha eliminado la necesidad de una API para poder realizar las solicitudes.
+            - Se ha creado y optimizado la app para mayor compatibilidad.
+            - Se ha convertido la app en multiplataforma.
+            
+            [💻WINDOWS](https://github.com/${{ github.repository }}/releases/download/v${{ env.BUILD_VERSION }}/windows.zip)
+            [🐧LINUX](https://github.com/${{ github.repository }}/releases/download/v${{ env.BUILD_VERSION }}/linux.zip)
+            [🍏MACOS](https://github.com/${{ github.repository }}/releases/download/v${{ env.BUILD_VERSION }}/macos.zip)
+            [🤖ANDROID](https://github.com/${{ github.repository }}/releases/download/v${{ env.BUILD_VERSION }}/app-release.apk)
+          format: markdown
+          disable_web_page_preview: true
