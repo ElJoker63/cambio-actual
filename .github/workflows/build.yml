@@ -151,10 +151,24 @@ jobs:
       - name: Zip Artifacts
         run: |
           cd artifacts
+          echo "Initial directory structure:"
           ls -la
-          mv ipa-flet/Runner.xcarchive/Products/Applications Payload
-          zip -r ipa-flet.ipa ipa-flet/Payload
+          echo "\nShowing ipa-flet contents:"
+          ls -la ipa-flet/
+          echo "\nShowing complete path structure:"
+          find ipa-flet -type d
+          mv ipa-flet/Runner.xcarchive/Products/Applications ipa-flet/Payload
+          echo "\nDirectory structure after mv:"
+          ls -la ipa-flet/
+          cd ipa-flet
+          zip -r ../ipa-flet.ipa Payload
+          cd ..
           zip -r windows-flet.zip windows-flet/
+
+      - name: List Workspace After Zipping
+        run: |
+          echo "Artifacts Directory After Zipping:"
+          ls -la artifacts/
 
 
       - name: List Workspace After Zipping
