@@ -1,3 +1,5 @@
+<p align="center"><a href="https://github.com//ElJoker63/Cambio-actual/releases/latest"><img alt="Dynamic JSON Badge" src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.github.com%2Frepos%2FElJoker63%2FCambio-actual%2Freleases%2Flatest&query=%24.tag_name&style=for-the-badge&label=RELEASE&color=green">
+
 <img src='screenshots/1.jpg' width=70><img src='screenshots/2.jpg' width=70><img src='screenshots/3.jpg' width=70><img src='screenshots/4.jpg' width=70>
 
 # Cambio Actual
@@ -67,10 +69,6 @@ La aplicación se iniciará en modo oscuro predeterminado y muestra la vista pri
 - Haga clic en el ícono de cambio de moneda en la barra superior para cambiar a la vista de criptomoneda
 - Haga clic en el ícono de inicio para volver a la vista principal
 - Haga clic en el ícono de información para ver los detalles y enlaces de la aplicación
-
-## Versión
-
-Versión actual: 0.0.2
 
 ## Licencia
 

@@ -1,3 +1,5 @@
+<p align="center"><a href="https://github.com//ElJoker63/Cambio-actual/releases/latest"><img alt="Dynamic JSON Badge" src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.github.com%2Frepos%2FElJoker63%2FCambio-actual%2Freleases%2Flatest&query=%24.tag_name&style=for-the-badge&label=RELEASE&color=green">
+
 <img src='screenshots/1.jpg' width=70><img src='screenshots/2.jpg' width=70><img src='screenshots/3.jpg' width=70><img src='screenshots/4.jpg' width=70>
 
 # Cambio Actual
@@ -67,10 +69,6 @@ The application will start in dark mode by default and display the main currency
 - Click the currency exchange icon in the top bar to switch to cryptocurrency view
 - Click the home icon to return to the main view
 - Click the information icon to view app details and links
-
-## Version
-
-Current version: 0.0.3
 
 ## License
 
