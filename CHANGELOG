@@ -1,3 +1,9 @@
+v0.0.4
+------------------
+- Solucion de algunos errores
+- Se eliminó el auto chequeo de actualización
+- Pequeños cambios en la interfaz
+
 v0.0.3
 ------------------
 - Separacion de proceso de carga (vistas y subprocesos)
