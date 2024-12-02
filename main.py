@@ -4,7 +4,7 @@ from api import *
 import threading
 
 APP_NAME = "CAMBIO ACTUAL"
-VERSION = '0.0.3'
+VERSION = '0.0.4'
 remote = ''
 
 class CoinExchangeApp:
@@ -35,7 +35,7 @@ class CoinExchangeApp:
         )
         
         self.update_modal = ft.CupertinoAlertDialog(
-            modal=True,
+            modal=False,
             title=ft.Text(f"ACTUALIZACIÓN {self.info_update[2]}", font_family="Qs-B", size=20, color=ft.colors.PRIMARY),
             content=ft.Column(
                 controls=[
@@ -52,6 +52,20 @@ class CoinExchangeApp:
             actions=[
                 ft.TextButton("ACTUALIZAR", url=self.info_update[3]),
             ],
+        )
+        self.no_update_text = f'''USTED TIENE LA ULTIMA ACTUALIZACIÓN 😊'''
+        self.no_update_modal = ft.CupertinoAlertDialog(
+            modal=False,
+            title=ft.Text(f"EN HORA BUENA", font_family="Qs-B", size=20, color=ft.colors.PRIMARY),
+            content=ft.Column(
+                controls=[
+                    ft.Divider(height=40, color=ft.colors.TRANSPARENT),
+                    ft.Markdown(self.no_update_text),
+                    ft.Divider(height=40, color=ft.colors.TRANSPARENT),
+                ],
+                tight=True,
+                spacing=0,
+            ),
         )
 
         def handle_close(e):
@@ -159,7 +173,10 @@ class CoinExchangeApp:
         )
 
         return ft.AppBar(
+            leading=ft.TextButton(icon=ft.icons.UPDATE_ROUNDED, icon_color=ft.colors.WHITE, on_click=lambda _: threading.Thread(target=self.check_version_app()).start()),
             title=ft.Row([ft.Text(title, color=ft.colors.WHITE, font_family="Qs-B")], alignment=ft.MainAxisAlignment.CENTER),
+            center_title=True,
+            force_material_transparency=False,
             actions=[
                 ft.PopupMenuButton(
                     icon_color=ft.colors.WHITE,
@@ -273,6 +290,8 @@ class CoinExchangeApp:
         latest_version = update_info[2].replace('v', '')
         if compare_versions(current_version, latest_version) == -1:
             self.page.open(self.update_modal)
+        else:
+            self.page.open(self.no_update_modal)
 
     def route_change(self, route):
         self.page.views.clear()
@@ -317,7 +336,6 @@ class CoinExchangeApp:
                     ], bgcolor="#202020",
                 )
             )
-        threading.Thread(target=self.check_version_app()).start()
         self.page.update()
 
     def view_pop(self, view):
