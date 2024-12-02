@@ -1,4 +1,4 @@
-name: All Builds (IPA, APK, Windows)
+name: APK
 
 on:
   # Allows you to run this workflow manually from the Actions tab of the repository
