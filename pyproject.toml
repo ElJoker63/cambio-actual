@@ -1,15 +1,15 @@
 [project]
 
 name = "ca"
-version = "0.0.2"
-description = "App para la descarga de archivos"
+version = "0.0.5"
+description = "A real-time currency exchange rate and cryptocurrency price viewer built with Flet."
 authors = [
   {name = "ELJoker63", email = "eljoker630@gmail.com"}
 ]
-dependencies = ["flet==0.26.0", "requests", "bs4", "lxml"]
+dependencies = ["flet", "requests"]
 
 [tool.flet.app]
-exclude = ["__pycache__", "requirements.txt", ".gitignore", "README.md", "README_ES.md", "CHANGELOG", "pyproject.toml", "build", ".gitattributes", ".github", ".venv", "screenshots", "storage"]
+exclude = ["__pycache__", "requirements.txt", ".gitignore", "README.md", "README_ES.md", "CHANGELOG", "pyproject.toml", "build", ".gitattributes", ".github", ".venv", "screenshots", "storage", ".git"]
 
 [tool.flet]
 org = "com.aewaredev"
