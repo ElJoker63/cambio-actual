@@ -2,6 +2,7 @@ import flet as ft
 from api_toque import get_compra, get_venta, get_msg, get_crypto
 from api import *
 import threading
+import flet_webview as fwv
 
 APP_NAME = "CAMBIO ACTUAL"
 VERSION = '0.0.5'
@@ -122,7 +123,7 @@ class CoinExchangeApp:
             ],
         )
         
-        self.wv = ft.WebView("https://img.cambiocuba.money/calculator/fiat", expand=True)
+        self.wv = fwv.WebView("https://img.cambiocuba.money/calculator/fiat", expand=True)
 
     def create_app_bar(self, title):
         def handle_popup_item_clicked(e):

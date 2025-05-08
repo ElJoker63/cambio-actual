@@ -6,7 +6,7 @@ description = "A real-time currency exchange rate and cryptocurrency price viewe
 authors = [
   {name = "ELJoker63", email = "eljoker630@gmail.com"}
 ]
-dependencies = ["flet", "requests"]
+dependencies = ["flet", "requests", "flet-webview"]
 
 [tool.flet.app]
 exclude = ["__pycache__", "requirements.txt", ".gitignore", "README.md", "README_ES.md", "CHANGELOG", "pyproject.toml", "build", ".gitattributes", ".github", ".venv", "screenshots", "storage", ".git"]
