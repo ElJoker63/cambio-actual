@@ -8,7 +8,7 @@ Un visualizador de tipos de cambio de divisas y precios de criptomonedas en tiem
 
 ## Descarga
 <div align="center">
-    <a href="https://github.com/ElJoker63/cambio-actual/releases/download/v0.0.3/Cambio.Actual_0.0.3_202411121-windows-amd64.zip"><img src="https://raw.githubusercontent.com/ElJoker63/cambio-actual/refs/heads/main/screenshots/windows.png"></a><a href="https://github.com/ElJoker63/cambio-actual/releases/download/v0.0.3/app-release.apk"><img src="https://raw.githubusercontent.com/ElJoker63/cambio-actual/refs/heads/main/screenshots/android.png"></a><br>
+    <a href="https://github.com/ElJoker63/cambio-actual/releases/download/v0.0.5/Cambio.Actual_0.0.5_202411121-windows-amd64.zip"><img src="https://raw.githubusercontent.com/ElJoker63/cambio-actual/refs/heads/main/screenshots/windows.png"></a><a href="https://github.com/ElJoker63/cambio-actual/releases/download/v0.0.5/app-release.apk"><img src="https://raw.githubusercontent.com/ElJoker63/cambio-actual/refs/heads/main/screenshots/android.png"></a><br>
 <img src="https://img.shields.io/github/downloads/ElJoker63/cambio-actual/total?style=for-the-badge&label=Descargas&color=blue">
 </div>
 
