@@ -14,7 +14,7 @@ fecha_actual_formateada = fecha_actual.strftime("%Y-%m-%d")
 fecha_24h_antes_formateada = fecha_24h_antes.strftime("%Y-%m-%d")
 
 def get_compra(coin):
-    url = f'https://api.cambiocuba.money/api/v1/x-rates-by-date-range-history?trmi=true&cur={coin}&offer=Compra&period=1D'
+    url = f'https://api.cambiocuba.money/api/v1/x-rates-by-date-range-history?trmi=true&cur={coin}&offer=Compra&period=2D'
     req = requests.get(url).text
     res = json.loads(req)
     last = res[0]['last']
@@ -22,7 +22,7 @@ def get_compra(coin):
     
 
 def get_venta(coin):
-    url = f'https://api.cambiocuba.money/api/v1/x-rates-by-date-range-history?trmi=true&cur={coin}&offer=Venta&period=1D'
+    url = f'https://api.cambiocuba.money/api/v1/x-rates-by-date-range-history?trmi=true&cur={coin}&offer=Venta&period=2D'
     req = requests.get(url).text
     res = json.loads(req)
     if res == []:

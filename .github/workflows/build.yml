@@ -6,10 +6,10 @@ on:
 
 env:
   # https://flet.dev/docs/publish#versioning
-  BUILD_NUMBER: 202411121
-  BUILD_VERSION: 0.0.3
-  PYTHON_VERSION: 3.12.2
-  FLUTTER_VERSION: 3.24.0
+  BUILD_NUMBER: 202505081
+  BUILD_VERSION: 0.0.5
+  PYTHON_VERSION: 3.13.1
+  FLUTTER_VERSION: 3.29.3
 
 jobs:
   build-apk:

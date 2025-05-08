@@ -4,7 +4,7 @@ from api import *
 import threading
 
 APP_NAME = "CAMBIO ACTUAL"
-VERSION = '0.0.4'
+VERSION = '0.0.5'
 remote = ''
 
 class CoinExchangeApp:
@@ -23,28 +23,28 @@ class CoinExchangeApp:
                         ft.ListTile(
                             subtitle=ft.ElevatedButton(
                                 f"LEER",
-                                color=ft.colors.WHITE,
-                                bgcolor=ft.colors.PRIMARY,
+                                color=ft.Colors.WHITE,
+                                bgcolor=ft.Colors.PRIMARY,
                                 on_click=lambda _: self.page.open(self.dis_modal)
                             ),
                         ),
                     ]
                 ),
                 padding=0,
-            ), color=ft.colors.SECONDARY
+            ), color=ft.Colors.SECONDARY
         )
         
         self.update_modal = ft.CupertinoAlertDialog(
             modal=False,
-            title=ft.Text(f"ACTUALIZACIÓN {self.info_update[2]}", font_family="Qs-B", size=20, color=ft.colors.PRIMARY),
+            title=ft.Text(f"ACTUALIZACIÓN {self.info_update[2]}", font_family="Qs-B", size=20, color=ft.Colors.PRIMARY),
             content=ft.Column(
                 controls=[
-                    ft.Divider(height=40, color=ft.colors.TRANSPARENT),
-                    ft.Row([ft.Image(src=f"{remote}/Update.svg", width=35, color=ft.colors.PRIMARY)], alignment=ft.MainAxisAlignment.CENTER),
-                    ft.Row([ft.Text(f'Descargas: {self.info_update[4]}', color=ft.colors.PRIMARY)], alignment=ft.MainAxisAlignment.CENTER),
-                    ft.Divider(height=40, color=ft.colors.TRANSPARENT),
+                    ft.Divider(height=40, color='transparent'),
+                    ft.Row([ft.Image(src=f"{remote}/Update.svg", width=35, color=ft.Colors.PRIMARY)], alignment=ft.MainAxisAlignment.CENTER),
+                    ft.Row([ft.Text(f'Descargas: {self.info_update[4]}', color=ft.Colors.PRIMARY)], alignment=ft.MainAxisAlignment.CENTER),
+                    ft.Divider(height=40, color='transparent'),
                     ft.Markdown(self.info_update[1]),
-                    ft.Divider(height=40, color=ft.colors.TRANSPARENT),
+                    ft.Divider(height=40, color='transparent'),
                 ],
                 tight=True,
                 spacing=0,
@@ -56,12 +56,12 @@ class CoinExchangeApp:
         self.no_update_text = f'''USTED TIENE LA ULTIMA ACTUALIZACIÓN 😊'''
         self.no_update_modal = ft.CupertinoAlertDialog(
             modal=False,
-            title=ft.Text(f"EN HORA BUENA", font_family="Qs-B", size=20, color=ft.colors.PRIMARY),
+            title=ft.Text(f"EN HORA BUENA", font_family="Qs-B", size=20, color=ft.Colors.PRIMARY),
             content=ft.Column(
                 controls=[
-                    ft.Divider(height=40, color=ft.colors.TRANSPARENT),
+                    ft.Divider(height=40, color='transparent'),
                     ft.Markdown(self.no_update_text),
-                    ft.Divider(height=40, color=ft.colors.TRANSPARENT),
+                    ft.Divider(height=40, color='transparent'),
                 ],
                 tight=True,
                 spacing=0,
@@ -73,28 +73,28 @@ class CoinExchangeApp:
 
         self.dlg_modal = ft.CupertinoAlertDialog(
             modal=True,
-            title=ft.Text("INFORMACIÓN", color=ft.colors.PRIMARY),
+            title=ft.Text("INFORMACIÓN", color=ft.Colors.PRIMARY),
             content=ft.Column(
                 controls=[
-                    ft.Divider(height=40, color=ft.colors.TRANSPARENT),
-                    ft.Text('Aplicación que brinda la información de los precios proporcionados por ElToque del cambio actual en tiempo real.', color=ft.colors.PRIMARY, text_align='center'),
-                    ft.Divider(height=40, color=ft.colors.TRANSPARENT),
-                    ft.Row([ft.Text('Copyright (c) 2024', color=ft.colors.PRIMARY)], alignment=ft.MainAxisAlignment.CENTER),
-                    ft.Row([ft.Text('AEWareDevs & ByteBloom', color=ft.colors.PRIMARY)], alignment=ft.MainAxisAlignment.CENTER),
-                    ft.Row([ft.Text(f'Version: v{VERSION}', color=ft.colors.PRIMARY)], alignment=ft.MainAxisAlignment.CENTER),
-                    ft.Divider(height=40, color=ft.colors.TRANSPARENT),
+                    ft.Divider(height=40, color='transparent'),
+                    ft.Text('Aplicación que brinda la información de los precios proporcionados por ElToque del cambio actual en tiempo real.', color=ft.Colors.PRIMARY, text_align='center'),
+                    ft.Divider(height=40, color='transparent'),
+                    ft.Row([ft.Text('Copyright (c) 2024-2025', color=ft.Colors.PRIMARY)], alignment=ft.MainAxisAlignment.CENTER),
+                    ft.Row([ft.Text('AEWareDevs & ByteBloom', color=ft.Colors.PRIMARY)], alignment=ft.MainAxisAlignment.CENTER),
+                    ft.Row([ft.Text(f'Version: v{VERSION}', color=ft.Colors.PRIMARY)], alignment=ft.MainAxisAlignment.CENTER),
+                    ft.Divider(height=40, color='transparent'),
                     ft.Row([
                         ft.TextButton(content=
                                     ft.Row([
-                                        ft.Image(src=f"{remote}/Octocat.svg", height=24, width=24, color=ft.colors.PRIMARY),
+                                        ft.Image(src=f"{remote}/Octocat.svg", height=24, width=24, color=ft.Colors.PRIMARY),
                                         ft.Text("GitHub",font_family="Qs-B")]),url=(f"https://github.com/ElJoker63/cambio-actual")),
                         ft.TextButton(content=
                                     ft.Row([
-                                        ft.Image(src=f"{remote}/Telegram.svg", height=24, width=24, color=ft.colors.PRIMARY),
+                                        ft.Image(src=f"{remote}/Telegram.svg", height=24, width=24, color=ft.Colors.PRIMARY),
                                         ft.Text("Telegram",font_family="Qs-B")]),url=(f"https://t.me/cambioactualapk"))], alignment=ft.MainAxisAlignment.CENTER),
                     ft.Row([ft.TextButton(content=
                                     ft.Row([
-                                        ft.Image(src=f"{remote}/lol.png", height=24, width=24, color=ft.colors.PRIMARY),
+                                        ft.Image(src=f"{remote}/lol.png", height=24, width=24, color=ft.Colors.PRIMARY),
                                         ft.Text("ByteBloom",font_family="Qs-B")]),url=(f"https://t.me/+z771oePMvc44NDI5"))], alignment=ft.MainAxisAlignment.CENTER),
                 ],
                 tight=True,
@@ -112,7 +112,7 @@ class CoinExchangeApp:
             modal=True,
             content=ft.Column(
                 controls=[
-                    ft.Text(texto, size=14, color=ft.colors.RED, text_align='center')
+                    ft.Text(texto, size=14, color=ft.Colors.RED, text_align='center')
                 ],
                 tight=True,
                 spacing=0,
@@ -173,17 +173,17 @@ class CoinExchangeApp:
         )
 
         return ft.AppBar(
-            leading=ft.TextButton(icon=ft.icons.UPDATE_ROUNDED, icon_color=ft.colors.WHITE, on_click=lambda _: threading.Thread(target=self.check_version_app()).start()),
-            title=ft.Row([ft.Text(title, color=ft.colors.WHITE, font_family="Qs-B")], alignment=ft.MainAxisAlignment.CENTER),
+            leading=ft.TextButton(icon=ft.icons.UPDATE_ROUNDED, icon_color=ft.Colors.WHITE, on_click=lambda _: threading.Thread(target=self.check_version_app()).start()),
+            title=ft.Row([ft.Text(title, color=ft.Colors.WHITE, font_family="Qs-B")], alignment=ft.MainAxisAlignment.CENTER),
             center_title=True,
             force_material_transparency=False,
             actions=[
                 ft.PopupMenuButton(
-                    icon_color=ft.colors.WHITE,
+                    icon_color=ft.Colors.WHITE,
                     items=menu_items
                 ),
             ],
-            bgcolor=ft.colors.PRIMARY,
+            bgcolor=ft.Colors.PRIMARY,
         )
 
     def main(self, page: ft.Page):
@@ -195,7 +195,7 @@ class CoinExchangeApp:
         self.page.theme = ft.Theme(
             font_family="Qs-L",
             color_scheme=ft.ColorScheme(
-                primary=ft.colors.GREEN,
+                primary=ft.Colors.GREEN,
                 secondary="#2E2E2E",
                 background="#202020",
             ),
@@ -209,7 +209,7 @@ class CoinExchangeApp:
         }
 
         self.coins = ["USD", "ECU", "MLC", "BTC"]
-        self.float_button = ft.FloatingActionButton(icon=ft.icons.UPDATE, on_click=lambda _: self.page.update(), bgcolor=ft.colors.PRIMARY)
+        self.float_button = ft.FloatingActionButton(icon=ft.icons.UPDATE, on_click=lambda _: self.page.update(), bgcolor=ft.Colors.PRIMARY)
 
         self.page.on_route_change = self.route_change
         self.page.on_view_pop = self.view_pop
@@ -230,24 +230,24 @@ class CoinExchangeApp:
                                         src=f"{remote}/{coin}.png",
                                         width=48,
                                         height=48,
-                                        color=ft.colors.WHITE,
+                                        color=ft.Colors.WHITE,
                                     ),
                                     title=ft.Text(
                                         f"{coin if coin != 'ECU' else 'EURO'}",
                                         font_family="Qs-B",
-                                        color=ft.colors.WHITE,
+                                        color=ft.Colors.WHITE,
                                     ),
                                     subtitle=ft.Text(
                                         f"COMPRA: {compra} | VENTA: {venta}",
                                         font_family="Qs-M",
-                                        color=ft.colors.WHITE,
+                                        color=ft.Colors.WHITE,
                                     ),
                                 ),
                             ]
                         ),
                         padding=0,
                     )
-                , color=ft.colors.SECONDARY)
+                , color=ft.Colors.SECONDARY)
             )
         self.page.update()
 
@@ -263,17 +263,17 @@ class CoinExchangeApp:
                                 ft.ListTile(
                                     leading=ft.Image(
                                         f"{remote}/{ms['symbol']}.png",
-                                        color=ft.colors.WHITE,
+                                        color=ft.Colors.WHITE,
                                     ),
                                     title=ft.Text(
                                         f"{ms['symbol']}",
-                                        color=ft.colors.WHITE,
+                                        color=ft.Colors.WHITE,
                                         font_family="Qs-B"
                                     ),
                                     subtitle=ft.Text(
                                         f"{round(ms['price'], 2)} USD",
                                         font_family="Qs-M", 
-                                        color=ft.colors.WHITE,
+                                        color=ft.Colors.WHITE,
                                     ),
                                 ),
                             ]
