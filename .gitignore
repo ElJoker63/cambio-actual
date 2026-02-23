@@ -4,3 +4,4 @@
 BUILD.cmd
 *.pyc
 views/home.py
+/.venv
