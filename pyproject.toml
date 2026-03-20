@@ -1,7 +1,7 @@
 [project]
 
 name = "ca"
-version = "0.0.5"
+version = "0.0.6"
 description = "A real-time currency exchange rate and cryptocurrency price viewer built with Flet."
 authors = [
   {name = "ELJoker63", email = "eljoker630@gmail.com"}
@@ -15,8 +15,8 @@ exclude = ["__pycache__", "requirements.txt", ".gitignore", "README.md", "README
 org = "com.aewaredev"
 product = "Cambio Actual"
 company = "AEwareDev"
-copyright = "Copyright (C) 2025 by AEwareDev"
-build_number = 202501291
+copyright = "Copyright (C) 2025 - 2026 by AEwareDev"
+build_number = 202603201
 #permissions = ["storage", "internet", "phone"]
 flutter.dependencies = ["flet_lottie", "flet_permission_handler"]
 

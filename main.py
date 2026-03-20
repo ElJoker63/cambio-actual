@@ -5,7 +5,7 @@ import threading
 import flet_webview as fwv
 
 APP_NAME = "CAMBIO ACTUAL"
-VERSION = '0.0.5'
+VERSION = '0.0.6'
 remote = ''
 
 class CoinExchangeApp:
@@ -22,7 +22,7 @@ class CoinExchangeApp:
                 content=ft.Column(
                     [
                         ft.ListTile(
-                            subtitle=ft.ElevatedButton(
+                            subtitle=ft.Button(
                                 f"LEER",
                                 color=ft.Colors.WHITE,
                                 bgcolor=ft.Colors.PRIMARY,
@@ -32,7 +32,8 @@ class CoinExchangeApp:
                     ]
                 ),
                 padding=0,
-            ), color=ft.Colors.SECONDARY
+                bgcolor=ft.Colors.SECONDARY
+            )
         )
         
         self.update_modal = ft.CupertinoAlertDialog(
@@ -174,7 +175,7 @@ class CoinExchangeApp:
         )
 
         return ft.AppBar(
-            leading=ft.TextButton(icon=ft.icons.UPDATE_ROUNDED, icon_color=ft.Colors.WHITE, on_click=lambda _: threading.Thread(target=self.check_version_app()).start()),
+            leading=ft.TextButton(icon=ft.icons.Icons.UPDATE_ROUNDED, icon_color=ft.Colors.WHITE, on_click=lambda _: threading.Thread(target=self.check_version_app()).start()),
             title=ft.Row([ft.Text(title, color=ft.Colors.WHITE, font_family="Qs-B")], alignment=ft.MainAxisAlignment.CENTER),
             center_title=True,
             force_material_transparency=False,
@@ -198,9 +199,9 @@ class CoinExchangeApp:
             color_scheme=ft.ColorScheme(
                 primary=ft.Colors.GREEN,
                 secondary="#2E2E2E",
-                background="#202020",
             ),
         )
+        self.page.bgcolor = "#202020"
         self.page.fonts = {
             "Qs-B": f"{remote}/fonts/Quicksand-Bold.ttf",
             "Qs-L": f"{remote}/fonts/Quicksand-Light.ttf",
@@ -210,7 +211,7 @@ class CoinExchangeApp:
         }
 
         self.coins = ["USD", "ECU", "MLC", "BTC"]
-        self.float_button = ft.FloatingActionButton(icon=ft.icons.UPDATE, on_click=lambda _: self.page.update(), bgcolor=ft.Colors.PRIMARY)
+        self.float_button = ft.FloatingActionButton(content=ft.Icon(ft.icons.Icons.REFRESH, color=ft.Colors.WHITE), on_click=lambda _: self.page.update(), bgcolor=ft.Colors.PRIMARY)
 
         self.page.on_route_change = self.route_change
         self.page.on_view_pop = self.view_pop
@@ -247,8 +248,9 @@ class CoinExchangeApp:
                             ]
                         ),
                         padding=0,
+                        bgcolor=ft.Colors.SECONDARY
                     )
-                , color=ft.Colors.SECONDARY)
+                )
             )
         self.page.update()
 
@@ -280,7 +282,8 @@ class CoinExchangeApp:
                             ]
                         ),
                         padding=0,
-                    ), color='#2E2E2E',
+                        bgcolor='#2E2E2E',
+                    )
                 )
             )
         self.page.update()
@@ -345,6 +348,5 @@ class CoinExchangeApp:
         self.page.go(top_view.route)
 
 
-if __name__ == "__main__":
-    app = CoinExchangeApp()
-    ft.app(target=app.main, assets_dir="assets")
+app = CoinExchangeApp()
+ft.run(app.main, assets_dir="assets")
