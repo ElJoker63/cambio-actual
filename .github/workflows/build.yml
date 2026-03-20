@@ -3,6 +3,10 @@ name: APK
 on:
   # Allows you to run this workflow manually from the Actions tab of the repository
   workflow_dispatch:
+  # Run automatically on push to main branch
+  push:
+    branches:
+      - main
 
 env:
   # https://flet.dev/docs/publish#versioning
