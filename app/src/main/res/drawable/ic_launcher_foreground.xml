@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Top Arrow -->
+    <path
+        android:fillColor="@color/vibrant_green"
+        android:pathData="M54,30c10,0 18,8 18,18h6L66,60L54,48h6c0,-5.52 -4.48,-10 -10,-10V30z" />
+    <!-- Bottom Arrow -->
+    <path
+        android:fillColor="@color/vibrant_green"
+        android:pathData="M54,78c-10,0 -18,-8 -18,-18h-6L42,48L54,60h-6c0,5.52 4.48,10 10,10V78z" />
+    <!-- Dollar Sign -->
+    <path
+        android:fillColor="@color/vibrant_green"
+        android:pathData="M55,42h-2v2.1c-1.5,0.3 -2.5,1.2 -2.5,2.4h2.5c0,-0.5 0.5,-1 1,-1s1,0.5 1,1c0,0.5 -0.5,1 -1.5,1.5c-1.5,0.5 -2.5,1.5 -2.5,2.5c0,1.5 1,2.4 2.5,2.7v2.3h2v-2.3c1.5,-0.3 2.5,-1.2 2.5,-2.7h-2.5c0,0.5 -0.5,1 -1,1s-1,-0.5 -1,-1c0,-0.5 0.5,-1 1.5,-1.5c1.5,-0.5 2.5,-1.5 2.5,-2.5c0,-1.5 -1,-2.4 -2.5,-2.7V42z" />
+</vector>
