@@ -4,6 +4,7 @@ import com.aewaredev.cambioactual.R
 import com.aewaredev.cambioactual.data.api.UdyatApiService
 import com.aewaredev.cambioactual.data.api.UpdateApiService
 import com.aewaredev.cambioactual.data.local.RateDao
+import com.aewaredev.cambioactual.data.local.SmsDao
 import com.aewaredev.cambioactual.data.model.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,22 +15,62 @@ import java.util.Locale
 class ExchangeRepositoryImpl(
     private val apiService: UdyatApiService,
     private val updateApi: UpdateApiService,
-    private val rateDao: RateDao
+    private val rateDao: RateDao,
+    private val smsDao: SmsDao
 ) : ExchangeRepository {
 
     private val _informalRates = MutableStateFlow<List<ExchangeRate>>(emptyList())
     private val _cryptoRates = MutableStateFlow<List<ExchangeRate>>(emptyList())
-    private val _smsAlerts = MutableStateFlow<List<SmsAlert>>(emptyList())
 
     override fun getInformalRates(): Flow<List<ExchangeRate>> = _informalRates.asStateFlow()
     override fun getCryptoRates(): Flow<List<ExchangeRate>> = _cryptoRates.asStateFlow()
-    override fun getSmsAlerts(): Flow<List<SmsAlert>> = _smsAlerts.asStateFlow()
+    override fun getSmsAlerts(): Flow<List<SmsAlert>> = smsDao.getSmsAlerts()
 
     override fun getRateHistory(code: String): Flow<List<RateHistory>> = rateDao.getHistoryForCode(code)
     override fun getRateHistorySince(code: String, since: Long): Flow<List<RateHistory>> = 
         rateDao.getHistoryForCodeSince(code, since)
 
     private val allRelevantCodes = listOf("USD", "ECU", "MLC", "ZELLE", "MXN", "CAD", "BTC", "BNB", "TRX", "USDT", "CLA")
+    private val marketCodes = listOf("USD", "ECU", "MLC", "ZELLE", "MXN", "CAD", "CLA")
+    private val cryptoCodes = listOf("BTC", "BNB", "TRX", "USDT")
+
+    suspend fun loadLocalData() {
+        val informal = mutableListOf<ExchangeRate>()
+        marketCodes.forEach { code ->
+            val latest = rateDao.getLatestRateForCode(code)
+            if (latest != null) {
+                informal.add(ExchangeRate(
+                    code = code,
+                    name = getCurrencyName(code),
+                    buy = latest.value,
+                    sell = latest.value,
+                    median = latest.value,
+                    lastUpdated = "Local",
+                    trend = Trend.STABLE,
+                    iconResId = getCurrencyIcon(code)
+                ))
+            }
+        }
+        _informalRates.value = informal
+
+        val crypto = mutableListOf<ExchangeRate>()
+        cryptoCodes.forEach { code ->
+            val latest = rateDao.getLatestRateForCode(code)
+            if (latest != null) {
+                crypto.add(ExchangeRate(
+                    code = code,
+                    name = getCurrencyName(code),
+                    buy = latest.value,
+                    sell = latest.value,
+                    median = latest.value,
+                    lastUpdated = "Local",
+                    trend = Trend.STABLE,
+                    iconResId = getCurrencyIcon(code)
+                ))
+            }
+        }
+        _cryptoRates.value = crypto
+    }
 
     override suspend fun refreshRates() {
         try {
@@ -37,21 +78,15 @@ class ExchangeRepositoryImpl(
             if (response.isSuccessful) {
                 val data = response.body() ?: emptyList()
                 
-                // Date Normalization: Round current timestamp to nearest hour
                 val rawTimestamp = System.currentTimeMillis()
                 val timestamp = rawTimestamp - (rawTimestamp % (60 * 60 * 1000))
                 
-                // Market filtering
-                val marketCodes = listOf("USD", "ECU", "MLC", "ZELLE", "MXN", "CAD", "CLA")
                 val mappedInformal = data.filter { coinRate ->
                     val code = mapCoinCode(coinRate.coin)
                     code in marketCodes
                 }.map { coinRate ->
                     val code = mapCoinCode(coinRate.coin)
-                    
-                    // Always persist historical point for every currency on each refresh
                     rateDao.insertRate(RateHistory(code = code, value = coinRate.last.value, timestamp = timestamp))
-
                     ExchangeRate(
                         code = code,
                         name = getCurrencyName(code),
@@ -64,17 +99,12 @@ class ExchangeRepositoryImpl(
                     )
                 }
 
-                // Crypto filtering
-                val cryptoCodes = listOf("BTC", "BNB", "TRX", "USDT")
                 val mappedCrypto = data.filter { coinRate ->
                     val code = mapCoinCode(coinRate.coin)
                     code in cryptoCodes
                 }.map { coinRate ->
                     val code = mapCoinCode(coinRate.coin)
-                    
-                    // Always persist historical point for every currency on each refresh
                     rateDao.insertRate(RateHistory(code = code, value = coinRate.last.value, timestamp = timestamp))
-
                     ExchangeRate(
                         code = code,
                         name = getCurrencyName(code),
@@ -96,7 +126,6 @@ class ExchangeRepositoryImpl(
     }
 
     override suspend fun refreshHistory(code: String, period: String) {
-        // Fetch full history from API and save to Room
         try {
             val apiCode = when(code) {
                 "ZELLE" -> "USD_ZELLE.CUP"
@@ -113,7 +142,6 @@ class ExchangeRepositoryImpl(
                     val historyPoints = body.data.mapNotNull { item ->
                         val date = dateFormat.parse(item.id)
                         if (date != null) {
-                            // API data is already normalized by day (id is yyyy-MM-dd)
                             RateHistory(code = code, value = item.median, timestamp = date.time)
                         } else null
                     }
@@ -125,7 +153,6 @@ class ExchangeRepositoryImpl(
         }
     }
 
-    // Full sync of all currencies on launch
     suspend fun syncAllHistory() {
         allRelevantCodes.forEach { code ->
             refreshHistory(code, "TODO")
@@ -147,7 +174,7 @@ class ExchangeRepositoryImpl(
                             alerts.add(SmsAlert(title = "Alerta $displayCode", message = msg, time = timeString))
                         }
                     }
-                    _smsAlerts.value = alerts.sortedByDescending { it.time }
+                    smsDao.insertSmsList(alerts)
                 }
             }
         } catch (e: Exception) {

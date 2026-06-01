@@ -1,13 +1,13 @@
 package com.aewaredev.cambioactual.ui.viewmodel
 
 import android.app.Application
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.core.content.FileProvider
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.aewaredev.cambioactual.data.model.*
+import com.aewaredev.cambioactual.data.preferences.SyncPreferences
 import com.aewaredev.cambioactual.data.preferences.ThemePreferences
 import com.aewaredev.cambioactual.data.repository.ExchangeRepository
 import com.aewaredev.cambioactual.data.repository.ExchangeRepositoryImpl
@@ -27,6 +27,7 @@ class ExchangeViewModel(
 ) : AndroidViewModel(application) {
 
     private val themePreferences = ThemePreferences(application)
+    private val syncPreferences = SyncPreferences(application)
 
     private val _isDarkTheme = MutableStateFlow(true)
     val isDarkTheme: StateFlow<Boolean> = _isDarkTheme
@@ -92,9 +93,14 @@ class ExchangeViewModel(
     )
 
     init {
-        refresh()
-        checkForUpdates()
         loadTheme()
+        checkForUpdates()
+        
+        viewModelScope.launch {
+            // Load local data first for instant display
+            (repository as? ExchangeRepositoryImpl)?.loadLocalData()
+            refresh()
+        }
     }
 
     private fun loadTheme() {
@@ -244,11 +250,19 @@ class ExchangeViewModel(
 
     fun refresh() {
         viewModelScope.launch {
-            repository.refreshRates()
-            repository.refreshMessages()
-            
-            // Explicitly trigger history sync for all currencies on launch
-            (repository as? ExchangeRepositoryImpl)?.syncAllHistory()
+            val lastSync = syncPreferences.lastSyncTimestamp.first()
+            val now = System.currentTimeMillis()
+            val twelveHours = 12 * 60 * 60 * 1000L
+
+            if (now - lastSync > twelveHours) {
+                repository.refreshRates()
+                repository.refreshMessages()
+                (repository as? ExchangeRepositoryImpl)?.syncAllHistory()
+                syncPreferences.saveSyncTimestamp(now)
+            } else {
+                // If within 12h, ensure local data is loaded (it should be already by init)
+                (repository as? ExchangeRepositoryImpl)?.loadLocalData()
+            }
         }
     }
 }

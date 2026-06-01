@@ -45,7 +45,12 @@ fun NavApp(modifier: Modifier = Modifier) {
     val viewModel: ExchangeViewModel = viewModel {
         ExchangeViewModel(
             context.applicationContext as Application,
-            ExchangeRepositoryImpl(NetworkModule.udyatApi, NetworkModule.updateApi, database.rateDao())
+            ExchangeRepositoryImpl(
+                NetworkModule.udyatApi, 
+                NetworkModule.updateApi, 
+                database.rateDao(),
+                database.smsDao()
+            )
         )
     }
 

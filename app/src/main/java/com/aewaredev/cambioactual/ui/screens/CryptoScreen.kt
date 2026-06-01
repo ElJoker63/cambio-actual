@@ -63,7 +63,7 @@ fun CryptoItem(rate: ExchangeRate) {
     Surface(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(24.dp),
-        color = MaterialTheme.colorScheme.surface,
+        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.05f),
         border = androidx.compose.foundation.BorderStroke(
             width = 1.dp,
             brush = Brush.linearGradient(listOf(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f), MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)))
