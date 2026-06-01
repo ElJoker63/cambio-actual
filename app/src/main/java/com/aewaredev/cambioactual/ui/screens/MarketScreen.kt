@@ -102,17 +102,11 @@ fun MarketRateItem(
             modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Surface(
-                modifier = Modifier.size(48.dp),
-                shape = RoundedCornerShape(12.dp),
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.05f)
-            ) {
-                Image(
-                    painter = painterResource(id = rate.iconResId ?: R.drawable.placeholder),
-                    contentDescription = null,
-                    modifier = Modifier.padding(10.dp)
-                )
-            }
+            Image(
+                painter = painterResource(id = rate.iconResId ?: R.drawable.placeholder),
+                contentDescription = null,
+                modifier = Modifier.size(48.dp)
+            )
             Spacer(modifier = Modifier.width(16.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(

@@ -29,7 +29,7 @@ class ExchangeRepositoryImpl(
     override fun getRateHistorySince(code: String, since: Long): Flow<List<RateHistory>> = 
         rateDao.getHistoryForCodeSince(code, since)
 
-    private val allRelevantCodes = listOf("USD", "ECU", "MLC", "ZELLE", "MXN", "CAD", "BTC", "BNB", "TRX", "USDT")
+    private val allRelevantCodes = listOf("USD", "ECU", "MLC", "ZELLE", "MXN", "CAD", "BTC", "BNB", "TRX", "USDT", "CLA")
 
     override suspend fun refreshRates() {
         try {
@@ -42,7 +42,7 @@ class ExchangeRepositoryImpl(
                 val timestamp = rawTimestamp - (rawTimestamp % (60 * 60 * 1000))
                 
                 // Market filtering
-                val marketCodes = listOf("USD", "ECU", "MLC", "ZELLE", "MXN", "CAD")
+                val marketCodes = listOf("USD", "ECU", "MLC", "ZELLE", "MXN", "CAD", "CLA")
                 val mappedInformal = data.filter { coinRate ->
                     val code = mapCoinCode(coinRate.coin)
                     code in marketCodes
@@ -197,6 +197,7 @@ class ExchangeRepositoryImpl(
             "ZELLE" -> "Zelle"
             "MXN" -> "Peso Mexicano"
             "CAD" -> "Dólar Canadiense"
+            "CLA" -> "Clasica"
             else -> code
         }
     }
@@ -213,6 +214,7 @@ class ExchangeRepositoryImpl(
             "ZELLE" -> R.drawable.ic_zelle
             "MXN" -> R.drawable.ic_mxn
             "CAD" -> R.drawable.ic_cad
+            "CLA" -> R.drawable.ic_cla
             else -> R.drawable.placeholder
         }
     }
