@@ -11,6 +11,9 @@ import com.aewaredev.cambioactual.data.preferences.SyncPreferences
 import com.aewaredev.cambioactual.data.preferences.ThemePreferences
 import com.aewaredev.cambioactual.data.repository.ExchangeRepository
 import com.aewaredev.cambioactual.data.repository.ExchangeRepositoryImpl
+import androidx.glance.appwidget.updateAll
+import com.aewaredev.cambioactual.ui.widget.ExchangeWidget
+import com.aewaredev.cambioactual.ui.widget.QuickWidget
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -49,6 +52,9 @@ class ExchangeViewModel(
 
     private val _isDownloadingUpdate = MutableStateFlow(false)
     val isDownloadingUpdate: StateFlow<Boolean> = _isDownloadingUpdate
+
+    private val _initialSyncInProgress = MutableStateFlow(false)
+    val initialSyncInProgress: StateFlow<Boolean> = _initialSyncInProgress
 
     val informalRates: StateFlow<List<ExchangeRate>> = repository.getInformalRates()
         .combine(_searchQuery) { rates, query ->
@@ -181,6 +187,8 @@ class ExchangeViewModel(
             val nextTheme = !_isDarkTheme.value
             _isDarkTheme.value = nextTheme
             themePreferences.saveTheme(nextTheme)
+            ExchangeWidget().updateAll(getApplication())
+            QuickWidget().updateAll(getApplication())
         }
     }
 
@@ -255,10 +263,17 @@ class ExchangeViewModel(
             val twelveHours = 12 * 60 * 60 * 1000L
 
             if (now - lastSync > twelveHours) {
-                repository.refreshRates()
-                repository.refreshMessages()
-                (repository as? ExchangeRepositoryImpl)?.syncAllHistory()
-                syncPreferences.saveSyncTimestamp(now)
+                _initialSyncInProgress.value = true
+                try {
+                    repository.refreshRates()
+                    repository.refreshMessages()
+                    (repository as? ExchangeRepositoryImpl)?.syncAllHistory()
+                    syncPreferences.saveSyncTimestamp(now)
+                    ExchangeWidget().updateAll(getApplication<Application>())
+                    QuickWidget().updateAll(getApplication<Application>())
+                } finally {
+                    _initialSyncInProgress.value = false
+                }
             } else {
                 // If within 12h, ensure local data is loaded (it should be already by init)
                 (repository as? ExchangeRepositoryImpl)?.loadLocalData()

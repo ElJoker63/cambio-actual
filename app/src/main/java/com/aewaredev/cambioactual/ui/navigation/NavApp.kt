@@ -22,6 +22,7 @@ import androidx.room.Room
 import com.aewaredev.cambioactual.data.api.NetworkModule
 import com.aewaredev.cambioactual.data.local.AppDatabase
 import com.aewaredev.cambioactual.data.repository.ExchangeRepositoryImpl
+import com.aewaredev.cambioactual.ui.components.LoadingDialog
 import com.aewaredev.cambioactual.ui.components.UpdateDialog
 import com.aewaredev.cambioactual.ui.screens.ConverterScreen
 import com.aewaredev.cambioactual.ui.screens.CryptoScreen
@@ -34,13 +35,7 @@ import com.aewaredev.cambioactual.ui.viewmodel.ExchangeViewModel
 fun NavApp(modifier: Modifier = Modifier) {
     val context = LocalContext.current
     
-    val database = remember {
-        Room.databaseBuilder(
-            context,
-            AppDatabase::class.java,
-            AppDatabase.DATABASE_NAME
-        ).fallbackToDestructiveMigration(true).build()
-    }
+    val database = remember { AppDatabase.getInstance(context) }
 
     val viewModel: ExchangeViewModel = viewModel {
         ExchangeViewModel(
@@ -57,6 +52,7 @@ fun NavApp(modifier: Modifier = Modifier) {
     val isDarkTheme by viewModel.isDarkTheme.collectAsState()
     val updateInfo by viewModel.updateInfo.collectAsState()
     val isDownloadingUpdate by viewModel.isDownloadingUpdate.collectAsState()
+    val initialSyncInProgress by viewModel.initialSyncInProgress.collectAsState()
 
     CambioActualTheme(darkTheme = isDarkTheme) {
         val backStack = remember { mutableStateListOf<Destination>(Destination.Market) }
@@ -174,6 +170,10 @@ fun NavApp(modifier: Modifier = Modifier) {
                         isDownloading = isDownloadingUpdate,
                         onUpdate = { viewModel.downloadAndInstallUpdate(info) }
                     )
+                }
+
+                if (initialSyncInProgress) {
+                    LoadingDialog()
                 }
             }
         }
