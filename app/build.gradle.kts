@@ -34,9 +34,16 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     buildToolsVersion = "36.0.0"
     ndkVersion = "28.2.13676358"
+
+    sourceSets {
+        getByName("main").setRoot("cambio-actual/main")
+        getByName("test").setRoot("cambio-actual/test")
+        getByName("androidTest").setRoot("cambio-actual/androidTest")
+    }
 }
 
 dependencies {
