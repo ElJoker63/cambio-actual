@@ -91,7 +91,7 @@ fun SimpleHeader(
                 )
             }
 
-            if (showProfile) {
+            /*if (showProfile) {
                 Spacer(modifier = Modifier.width(8.dp))
                 IconButton(
                     onClick = onProfileClick,
@@ -108,7 +108,7 @@ fun SimpleHeader(
                         contentDescription = "Perfil"
                     )
                 }
-            }
+            }*/
         }
     }
 }

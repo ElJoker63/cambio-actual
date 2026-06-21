@@ -1,44 +1,49 @@
 # Cambio Actual
 
-**Cambio Actual** es una herramienta analítica avanzada diseñada para el seguimiento en tiempo real de los mercados financieros y de criptomonedas. Con una interfaz moderna y optimizada, la aplicación proporciona a los usuarios información crítica para la toma de decisiones financieras informadas.
+<p align="center">
+  <img src="app/cambio-actual/main/res/mipmap-xxxhdpi/ic_launcher.webp" width="128" height="128" alt="Cambio Actual Logo">
+</p>
 
-## Características Principales
+[![GitHub Release](https://img.shields.io/github/v/release/ElJoker63/cambio-actual?include_prereleases&style=flat-square&color=blue)](https://github.com/ElJoker63/cambio-actual/releases/latest)
+[![Platform](https://img.shields.io/badge/platform-Android-brightgreen.svg?style=flat-square)](https://developer.android.com/about)
+
+**Cambio Actual** es una herramienta analítica avanzada diseñada para el seguimiento en tiempo real de los mercados financieros y de criptomonedas, enfocada principalmente en el contexto cubano. Con una interfaz moderna y optimizada en Jetpack Compose, proporciona información crítica para la toma de decisiones financieras informadas.
+
+## 🚀 Características Principales
+
+### 🛒 Marketplace Integrado
+- **Anuncios de Compra/Venta**: Publica y explora ofertas de intercambio directamente en la aplicación.
+- **Perfiles Verificados**: Sistema de verificación de identidad para mayor seguridad en los tratos.
+- **Calificaciones**: Evalúa tu experiencia con otros usuarios para construir una comunidad confiable.
 
 ### 📊 Monitorización del Mercado Informal
-Seguimiento preciso de las tasas de cambio del mercado informal en tiempo real para múltiples divisas, incluyendo:
-- Dólar Estadounidense (USD)
-- Euro (EUR/ECU)
-- Moneda Libremente Convertible (MLC)
-- Zelle
-- Peso Mexicano (MXN)
-- Dólar Canadiense (CAD)
-- Clasica (CLA)
+Seguimiento preciso de las tasas de cambio del mercado informal en tiempo real para múltiples divisas:
+- **Dólar Estadounidense (USD)**, **Euro (EUR)**, **MLC**, **Zelle**, **Peso Mexicano (MXN)**, **Dólar Canadiense (CAD)** y **Clásica (CLA)**.
 
 ### ₿ Rastreador de Criptoactivos
-Vigilancia constante de los principales activos digitales del mercado global:
-- Bitcoin (BTC)
-- TRON (TRX)
-- Binance Coin (BNB)
-- Tether (USDT)
+Vigilancia constante de los principales activos digitales globales:
+- **Bitcoin (BTC)**, **TRON (TRX)**, **Binance Coin (BNB)** y **Tether (USDT)**.
 
 ### 📈 Gráficos de Tendencia Interactivos
-Visualización profunda del historial de precios mediante gráficos de alto rendimiento que permiten:
-- Selección de rangos dinámicos: 1 día, 1 semana, 3 semanas, 3 meses, 6 meses y todo el historial.
-- Interacción mediante cursor (crosshair) para consultar valores y fechas exactas con un toque.
-- Renderizado suavizado con gradientes dinámicos para una lectura profesional.
+Visualización profunda del historial de precios con:
+- Selección de rangos: 1 día hasta todo el historial.
+- Interacción mediante cursor (crosshair) para valores exactos.
+- Renderizado suavizado con gradientes dinámicos.
 
-### ✉️ Centro de Alertas SMS
-Un hub financiero dedicado que recopila y organiza mensajes del mercado, permitiendo estar al tanto de las últimas alertas y fluctuaciones sin salir de la aplicación.
+### 🔄 Herramientas Financieras
+- **Convertidor Multidivisa**: Calculadora rápida entre CUP y todas las divisas soportadas.
+- **Centro de Alertas SMS**: Hub dedicado que organiza mensajes del mercado para captar fluctuaciones al instante.
+- **Widgets de Pantalla de Inicio**: Variantes Analítica (4x2) y Rápida (2x2) para consultas sin abrir la app.
 
-### 🔄 Convertidor Multidivisa
-Calculadora integrada que permite realizar conversiones rápidas entre pesos cubanos (CUP) y todas las divisas y criptomonedas soportadas, utilizando siempre los valores más recientes del mercado.
+## 🛠️ Detalles Técnicos
+- **Interfaz**: Construida totalmente con **Jetpack Compose**.
+- **Arquitectura**: Clean Architecture con MVVM.
+- **Persistencia**: Room Database para acceso offline y caché inteligente.
+- **Networking**: Retrofit + Moshi para comunicación eficiente con APIs.
+- **Actualizaciones**: Sistema nativo integrado con GitHub que soporta renderizado **Markdown** en las notas de versión.
 
-### 📱 Widgets de Pantalla de Inicio
-Manténgase informado sin abrir la aplicación con dos variantes de widgets:
-- **Widget Analítico (4x2)**: Muestra el gráfico de tendencia histórico completo y el valor actual de forma expandida.
-- **Widget Rápido (2x2)**: Un mosaico minimalista con el icono de la moneda y su precio actual para una consulta instantánea.
+## 📥 Instalación
+Puedes descargar la última versión directamente desde la sección de [Releases](https://github.com/ElJoker63/cambio-actual/releases/latest) de este repositorio.
 
-### 🌗 Personalización y Eficiencia
-- **Temas Persistentes**: Soporte completo para modo Claro y Oscuro (Deep Black) que se guarda automáticamente según su preferencia.
-- **Sistema de Caché Inteligente**: Optimización de datos que permite el acceso offline a la información consultada recientemente y reduce el consumo de red.
-- **Actualizaciones Integradas**: Sistema de notificaciones nativo que informa sobre nuevas versiones disponibles a través de GitHub para garantizar que siempre cuente con las últimas mejoras.
+---
+Desarrollado por [AEware Developers](https://github.com/ElJoker63)

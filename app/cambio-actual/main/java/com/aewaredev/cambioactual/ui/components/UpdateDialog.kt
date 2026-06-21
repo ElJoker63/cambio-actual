@@ -16,6 +16,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.aewaredev.cambioactual.data.model.UpdateInfo
+import dev.jeziellago.compose.markdowntext.MarkdownText
+import androidx.compose.ui.platform.LocalUriHandler
 
 @Composable
 fun UpdateDialog(
@@ -23,6 +25,8 @@ fun UpdateDialog(
     isDownloading: Boolean,
     onUpdate: () -> Unit
 ) {
+    val uriHandler = LocalUriHandler.current
+
     Dialog(
         onDismissRequest = { },
         properties = DialogProperties(
@@ -54,7 +58,7 @@ fun UpdateDialog(
                 Spacer(modifier = Modifier.height(8.dp))
                 
                 Text(
-                    text = "Versión ${updateInfo.versionName}",
+                    text = updateInfo.versionName,
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Bold
@@ -67,11 +71,15 @@ fun UpdateDialog(
                         .heightIn(max = 200.dp)
                         .verticalScroll(rememberScrollState())
                 ) {
-                    Text(
-                        text = updateInfo.releaseNotes,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = Color.White.copy(alpha = 0.7f),
-                        lineHeight = 20.sp
+                    MarkdownText(
+                        markdown = updateInfo.releaseNotes,
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            color = Color.White.copy(alpha = 0.7f)
+                        ),
+                        linkColor = MaterialTheme.colorScheme.primary,
+                        onLinkClicked = { url ->
+                            uriHandler.openUri(url)
+                        }
                     )
                 }
 

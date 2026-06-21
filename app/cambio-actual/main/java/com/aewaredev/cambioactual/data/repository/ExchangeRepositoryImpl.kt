@@ -197,8 +197,12 @@ class ExchangeRepositoryImpl(
                     releaseNotes = release.body,
                     apkUrl = apkAsset?.downloadUrl ?: ""
                 )
-            } else null
+            } else {
+                android.util.Log.e("ExchangeRepository", "Error checking for updates: ${response.code()} ${response.message()}")
+                null
+            }
         } catch (e: Exception) {
+            android.util.Log.e("ExchangeRepository", "Exception checking for updates", e)
             null
         }
     }

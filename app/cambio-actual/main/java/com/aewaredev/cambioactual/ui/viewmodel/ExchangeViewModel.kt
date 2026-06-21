@@ -117,9 +117,18 @@ class ExchangeViewModel(
 
     private fun checkForUpdates() {
         viewModelScope.launch {
+            android.util.Log.d("ExchangeViewModel", "Checking for updates...")
             val info = repository.checkForUpdate()
-            if (info != null && info.versionCode > getCurrentVersionCode()) {
-                _updateInfo.value = info
+            if (info != null) {
+                android.util.Log.d("ExchangeViewModel", "Update info found: v${info.versionName} (${info.versionCode})")
+                if (info.versionCode > getCurrentVersionCode()) {
+                    android.util.Log.d("ExchangeViewModel", "New version available!")
+                    _updateInfo.value = info
+                } else {
+                    android.util.Log.d("ExchangeViewModel", "Already on latest version")
+                }
+            } else {
+                android.util.Log.d("ExchangeViewModel", "No update info returned")
             }
         }
     }

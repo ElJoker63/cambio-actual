@@ -14,6 +14,7 @@ import androidx.compose.material.icons.rounded.LightMode
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -25,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.aewaredev.cambioactual.R
 import com.aewaredev.cambioactual.data.model.ExchangeRate
+import com.aewaredev.cambioactual.ui.components.RateItem
 import com.aewaredev.cambioactual.ui.components.SimpleHeader
 import com.aewaredev.cambioactual.ui.components.TrendGraph
 import com.aewaredev.cambioactual.ui.viewmodel.ExchangeViewModel
@@ -43,6 +45,12 @@ fun MarketScreen(
     val isDarkTheme by viewModel.isDarkTheme.collectAsState()
     
     val currentRate = rates.find { it.code == selectedCurrency }
+
+    LaunchedEffect(rates) {
+        if (rates.isNotEmpty() && rates.none { it.code == selectedCurrency }) {
+            viewModel.selectCurrency(rates.first().code)
+        }
+    }
 
     Column(
         modifier = modifier
@@ -73,7 +81,7 @@ fun MarketScreen(
             }
             
             items(rates) { rate ->
-                MarketRateItem(
+                RateItem(
                     rate = rate,
                     isSelected = rate.code == selectedCurrency,
                     onClick = { viewModel.selectCurrency(rate.code) }
@@ -83,65 +91,5 @@ fun MarketScreen(
     }
 }
 
-@Composable
-fun MarketRateItem(
-    rate: ExchangeRate,
-    isSelected: Boolean,
-    onClick: () -> Unit
-) {
-    Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick),
-        shape = RoundedCornerShape(20.dp),
-        color = if (isSelected) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.primary.copy(alpha = 0.05f),
-        border = androidx.compose.foundation.BorderStroke(
-            width = if (isSelected) 2.dp else 1.dp,
-            brush = if (isSelected) {
-                Brush.linearGradient(listOf(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.primary))
-            } else {
-                Brush.linearGradient(listOf(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f), MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)))
-            }
-        )
-    ) {
-        Row(
-            modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Image(
-                painter = painterResource(id = rate.iconResId ?: R.drawable.placeholder),
-                contentDescription = null,
-                modifier = Modifier.size(48.dp)
-            )
-            Spacer(modifier = Modifier.width(16.dp))
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = rate.code,
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-                Text(
-                    text = rate.name,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
-                )
-            }
-            Column(horizontalAlignment = Alignment.End) {
-                Text(
-                    text = String.format(Locale.US, "%.2f", rate.median),
-                    style = MaterialTheme.typography.headlineSmall.copy(
-                        color = MaterialTheme.colorScheme.primary,
-                        fontWeight = FontWeight.Black
-                    )
-                )
-                Text(
-                    text = "CUP",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
-                    letterSpacing = 1.sp
-                )
-            }
-        }
-    }
-}
+// MarketRateItem removed and replaced by RateItem in components package
+

@@ -5,7 +5,7 @@ import retrofit2.Response
 import retrofit2.http.GET
 
 interface UpdateApiService {
-    @GET("repos/ElJoker63/cambio-actual-app/releases/latest")
+    @GET("repos/ElJoker63/cambio-actual/releases/latest")
     suspend fun getLatestRelease(): Response<GitHubRelease>
 
     companion object {

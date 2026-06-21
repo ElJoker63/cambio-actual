@@ -31,6 +31,12 @@ object NetworkModule {
         .readTimeout(60, TimeUnit.SECONDS)
         .writeTimeout(60, TimeUnit.SECONDS)
         .addInterceptor(loggingInterceptor)
+        .addInterceptor { chain ->
+            val request = chain.request().newBuilder()
+                .header("User-Agent", "CambioActual-App")
+                .build()
+            chain.proceed(request)
+        }
 
     private val udyatOkHttpClient = baseOkHttpClientBuilder.build()
 
