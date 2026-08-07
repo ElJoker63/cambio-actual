@@ -41,7 +41,7 @@ okhttp = "4.10.0"
 moshiKotlin = "1.15.2"
 moshiKotlinCodegen = "1.15.2"
 datastorePreferences = "1.1.7"
-material = "1.4.0"
+material = "1.12.0"
 glance = "1.1.1"
 compose-markdown = "0.5.6"
 
