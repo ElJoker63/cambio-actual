@@ -12,7 +12,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class ExchangeRepositoryImpl(
+import javax.inject.Inject
+
+class ExchangeRepositoryImpl @Inject constructor(
     private val apiService: UdyatApiService,
     private val updateApi: UpdateApiService,
     private val rateDao: RateDao,
@@ -35,11 +37,9 @@ class ExchangeRepositoryImpl(
     private val cryptoCodes = listOf("BTC", "BNB", "TRX", "USDT")
 
     suspend fun loadLocalData() {
-        val informal = mutableListOf<ExchangeRate>()
-        marketCodes.forEach { code ->
-            val latest = rateDao.getLatestRateForCode(code)
-            if (latest != null) {
-                informal.add(ExchangeRate(
+        val informal = marketCodes.mapNotNull { code ->
+            rateDao.getLatestRateForCode(code)?.let { latest ->
+                ExchangeRate(
                     code = code,
                     name = getCurrencyName(code),
                     buy = latest.value,
@@ -48,16 +48,14 @@ class ExchangeRepositoryImpl(
                     lastUpdated = "Local",
                     trend = Trend.STABLE,
                     iconResId = getCurrencyIcon(code)
-                ))
+                )
             }
         }
         _informalRates.value = informal
 
-        val crypto = mutableListOf<ExchangeRate>()
-        cryptoCodes.forEach { code ->
-            val latest = rateDao.getLatestRateForCode(code)
-            if (latest != null) {
-                crypto.add(ExchangeRate(
+        val crypto = cryptoCodes.mapNotNull { code ->
+            rateDao.getLatestRateForCode(code)?.let { latest ->
+                ExchangeRate(
                     code = code,
                     name = getCurrencyName(code),
                     buy = latest.value,
@@ -66,7 +64,7 @@ class ExchangeRepositoryImpl(
                     lastUpdated = "Local",
                     trend = Trend.STABLE,
                     iconResId = getCurrencyIcon(code)
-                ))
+                )
             }
         }
         _cryptoRates.value = crypto
@@ -81,12 +79,14 @@ class ExchangeRepositoryImpl(
                 val rawTimestamp = System.currentTimeMillis()
                 val timestamp = rawTimestamp - (rawTimestamp % (60 * 60 * 1000))
                 
+                val historyToInsert = mutableListOf<RateHistory>()
+                
                 val mappedInformal = data.filter { coinRate ->
                     val code = mapCoinCode(coinRate.coin)
                     code in marketCodes
                 }.map { coinRate ->
                     val code = mapCoinCode(coinRate.coin)
-                    rateDao.insertRate(RateHistory(code = code, value = coinRate.last.value, timestamp = timestamp))
+                    historyToInsert.add(RateHistory(code = code, value = coinRate.last.value, timestamp = timestamp))
                     ExchangeRate(
                         code = code,
                         name = getCurrencyName(code),
@@ -104,7 +104,7 @@ class ExchangeRepositoryImpl(
                     code in cryptoCodes
                 }.map { coinRate ->
                     val code = mapCoinCode(coinRate.coin)
-                    rateDao.insertRate(RateHistory(code = code, value = coinRate.last.value, timestamp = timestamp))
+                    historyToInsert.add(RateHistory(code = code, value = coinRate.last.value, timestamp = timestamp))
                     ExchangeRate(
                         code = code,
                         name = getCurrencyName(code),
@@ -115,6 +115,11 @@ class ExchangeRepositoryImpl(
                         trend = Trend.STABLE,
                         iconResId = getCurrencyIcon(code)
                     )
+                }
+
+                // Batch insert history
+                if (historyToInsert.isNotEmpty()) {
+                    rateDao.insertRates(historyToInsert)
                 }
 
                 _informalRates.value = mappedInformal

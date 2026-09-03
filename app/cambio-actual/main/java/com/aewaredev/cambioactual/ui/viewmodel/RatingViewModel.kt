@@ -10,7 +10,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class RatingViewModel(private val repository: RatingRepository) : ViewModel() {
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
+
+@HiltViewModel
+class RatingViewModel @Inject constructor(private val repository: RatingRepository) : ViewModel() {
 
     private val _ratingsState = MutableStateFlow<UiState<List<Rating>>>(UiState.Idle)
     val ratingsState: StateFlow<UiState<List<Rating>>> = _ratingsState

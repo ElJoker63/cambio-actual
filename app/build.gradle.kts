@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.google.devtools.ksp)
     alias(libs.plugins.jetbrains.kotlin.plugin.serialization)
+    alias(libs.plugins.google.dagger.hilt)
 }
 
 android {
@@ -13,8 +14,8 @@ android {
         applicationId = "com.aewaredev.cambioactual"
         minSdk = 24
         targetSdk = 37
-        versionCode = 8
-        versionName = "0.0.8"
+        versionCode = 9
+        versionName = "0.0.9"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -101,4 +102,7 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     "ksp"(libs.androidx.room.compiler)
     "ksp"(libs.moshi.kotlin.codegen)
+    implementation(libs.hilt.android)
+    "ksp"(libs.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
 }

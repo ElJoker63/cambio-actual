@@ -10,7 +10,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class MarketplaceViewModel(private val repository: MarketplaceRepository) : ViewModel() {
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
+
+@HiltViewModel
+class MarketplaceViewModel @Inject constructor(private val repository: MarketplaceRepository) : ViewModel() {
 
     private val _postsState = MutableStateFlow<UiState<List<MarketplacePost>>>(UiState.Idle)
     val postsState: StateFlow<UiState<List<MarketplacePost>>> = _postsState

@@ -13,7 +13,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
+
+@HiltViewModel
+class AuthViewModel @Inject constructor(private val repository: AuthRepository) : ViewModel() {
 
     private val _authState = MutableStateFlow<UiState<AuthResponse>>(UiState.Idle)
     val authState: StateFlow<UiState<AuthResponse>> = _authState

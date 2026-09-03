@@ -9,7 +9,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class ProfileViewModel(private val repository: UserRepository) : ViewModel() {
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
+
+@HiltViewModel
+class ProfileViewModel @Inject constructor(private val repository: UserRepository) : ViewModel() {
 
     private val _profileState = MutableStateFlow<UiState<UserProfile>>(UiState.Idle)
     val profileState: StateFlow<UiState<UserProfile>> = _profileState

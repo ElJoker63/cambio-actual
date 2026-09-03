@@ -1,7 +1,6 @@
 package com.aewaredev.cambioactual.ui.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,7 +22,6 @@ import androidx.compose.ui.unit.sp
 import com.aewaredev.cambioactual.R
 import com.aewaredev.cambioactual.data.model.ExchangeRate
 import com.aewaredev.cambioactual.ui.components.SimpleHeader
-import com.aewaredev.cambioactual.ui.theme.GradientBlue
 import com.aewaredev.cambioactual.ui.viewmodel.ExchangeViewModel
 import java.util.Locale
 
@@ -46,7 +44,7 @@ fun ConverterScreen(
             sell = 1.0,
             median = 1.0,
             lastUpdated = "",
-            iconResId = R.drawable.ic_mlc // Using MLC icon for CUP as placeholder or similar
+            iconResId = R.drawable.ic_mlc
         )
     }
 
@@ -61,9 +59,9 @@ fun ConverterScreen(
     }
 
     var selectedFromCode by remember { mutableStateOf("USD") }
-    var showFromSelector by remember { mutableStateOf(false) }
-
-    val fromRate = allRates.find { it.code == selectedFromCode } ?: cupRate
+    val fromRate = remember(allRates, selectedFromCode) {
+        allRates.find { it.code == selectedFromCode } ?: cupRate
+    }
 
     Column(
         modifier = modifier
@@ -79,116 +77,14 @@ fun ConverterScreen(
             onProfileClick = onNavigateToProfile
         )
 
-        Surface(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp, bottom = 24.dp),
-            shape = RoundedCornerShape(32.dp),
-            color = MaterialTheme.colorScheme.surface,
-            border = androidx.compose.foundation.BorderStroke(
-                width = 2.dp,
-                brush = Brush.linearGradient(listOf(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.primary))
-            )
-        ) {
-            Column(modifier = Modifier.padding(24.dp)) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "CANTIDAD BASE",
-                        style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
-                        letterSpacing = 1.sp
-                    )
-                    
-                    Box {
-                        Surface(
-                            onClick = { showFromSelector = true },
-                            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
-                            shape = RoundedCornerShape(12.dp)
-                        ) {
-                            Row(
-                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Icon(
-                                    painter = painterResource(id = fromRate.iconResId ?: R.drawable.placeholder),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(20.dp),
-                                    tint = Color.Unspecified
-                                )
-                                Spacer(Modifier.width(8.dp))
-                                Text(
-                                    text = selectedFromCode,
-                                    style = MaterialTheme.typography.labelLarge,
-                                    color = MaterialTheme.colorScheme.primary,
-                                    fontWeight = FontWeight.Bold
-                                )
-                                Spacer(Modifier.width(4.dp))
-                                Icon(
-                                    Icons.Rounded.SwapVert,
-                                    contentDescription = null,
-                                    modifier = Modifier.size(16.dp),
-                                    tint = MaterialTheme.colorScheme.primary
-                                )
-                            }
-                        }
-
-                        DropdownMenu(
-                            expanded = showFromSelector,
-                            onDismissRequest = { showFromSelector = false },
-                            modifier = Modifier
-                                .background(MaterialTheme.colorScheme.surface)
-                                .heightIn(max = 400.dp)
-                        ) {
-                            allRates.forEach { rate ->
-                                DropdownMenuItem(
-                                    text = { 
-                                        Column {
-                                            Text(rate.code, fontWeight = FontWeight.Bold)
-                                            Text(rate.name, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f))
-                                        }
-                                    },
-                                    leadingIcon = {
-                                        Icon(
-                                            painter = painterResource(id = rate.iconResId ?: R.drawable.placeholder),
-                                            contentDescription = null,
-                                            modifier = Modifier.size(28.dp),
-                                            tint = Color.Unspecified
-                                        )
-                                    },
-                                    onClick = {
-                                        selectedFromCode = rate.code
-                                        showFromSelector = false
-                                    }
-                                )
-                            }
-                        }
-                    }
-                }
-
-                TextField(
-                    value = amount,
-                    onValueChange = { amount = it },
-                    modifier = Modifier.fillMaxWidth(),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    textStyle = MaterialTheme.typography.headlineMedium.copy(
-                        color = MaterialTheme.colorScheme.primary,
-                        fontWeight = FontWeight.Black
-                    ),
-                    colors = TextFieldDefaults.colors(
-                        focusedContainerColor = Color.Transparent,
-                        unfocusedContainerColor = Color.Transparent,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
-                        cursorColor = MaterialTheme.colorScheme.primary
-                    ),
-                    singleLine = true
-                )
-            }
-        }
+        BaseAmountCard(
+            amount = amount,
+            onAmountChange = { amount = it },
+            selectedFromCode = selectedFromCode,
+            fromRate = fromRate,
+            allRates = allRates,
+            onCurrencySelect = { selectedFromCode = it }
+        )
 
         Text(
             text = "RESULTADOS DE CONVERSIÓN",
@@ -197,27 +93,166 @@ fun ConverterScreen(
             modifier = Modifier.padding(bottom = 16.dp, start = 4.dp)
         )
 
-        Column(
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            modifier = Modifier.padding(bottom = 100.dp)
-        ) {
-            val numericAmount = amount.toDoubleOrNull() ?: 0.0
-            val amountInCup = numericAmount * fromRate.median
-            
-            allRates.filter { it.code != selectedFromCode }
-                .sortedByDescending { it.code == "CUP" }
-                .forEach { rate ->
-                val convertedValue = if (rate.median != 0.0) amountInCup / rate.median else 0.0
+        ConversionResultsList(
+            amount = amount,
+            fromRate = fromRate,
+            allRates = allRates,
+            selectedFromCode = selectedFromCode
+        )
+    }
+}
+
+@Composable
+fun BaseAmountCard(
+    amount: String,
+    onAmountChange: (String) -> Unit,
+    selectedFromCode: String,
+    fromRate: ExchangeRate,
+    allRates: List<ExchangeRate>,
+    onCurrencySelect: (String) -> Unit
+) {
+    var showFromSelector by remember { mutableStateOf(false) }
+
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 16.dp, bottom = 24.dp),
+        shape = RoundedCornerShape(32.dp),
+        color = MaterialTheme.colorScheme.surface,
+        border = androidx.compose.foundation.BorderStroke(
+            width = 2.dp,
+            brush = Brush.linearGradient(listOf(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.primary))
+        )
+    ) {
+        Column(modifier = Modifier.padding(24.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "CANTIDAD BASE",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
+                    letterSpacing = 1.sp
+                )
+                
+                Box {
+                    Surface(
+                        onClick = { showFromSelector = true },
+                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                painter = painterResource(id = fromRate.iconResId ?: R.drawable.placeholder),
+                                contentDescription = null,
+                                modifier = Modifier.size(20.dp),
+                                tint = Color.Unspecified
+                            )
+                            Spacer(Modifier.width(8.dp))
+                            Text(
+                                text = selectedFromCode,
+                                style = MaterialTheme.typography.labelLarge,
+                                color = MaterialTheme.colorScheme.primary,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Spacer(Modifier.width(4.dp))
+                            Icon(
+                                Icons.Rounded.SwapVert,
+                                contentDescription = null,
+                                modifier = Modifier.size(16.dp),
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    }
+
+                    DropdownMenu(
+                        expanded = showFromSelector,
+                        onDismissRequest = { showFromSelector = false },
+                        modifier = Modifier
+                            .background(MaterialTheme.colorScheme.surface)
+                            .heightIn(max = 400.dp)
+                    ) {
+                        allRates.forEach { rate ->
+                            DropdownMenuItem(
+                                text = { 
+                                    Column {
+                                        Text(rate.code, fontWeight = FontWeight.Bold)
+                                        Text(rate.name, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f))
+                                    }
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        painter = painterResource(id = rate.iconResId ?: R.drawable.placeholder),
+                                        contentDescription = null,
+                                        modifier = Modifier.size(28.dp),
+                                        tint = Color.Unspecified
+                                    )
+                                },
+                                onClick = {
+                                    onCurrencySelect(rate.code)
+                                    showFromSelector = false
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+
+            TextField(
+                value = amount,
+                onValueChange = onAmountChange,
+                modifier = Modifier.fillMaxWidth(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                textStyle = MaterialTheme.typography.headlineMedium.copy(
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.Black
+                ),
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    cursorColor = MaterialTheme.colorScheme.primary
+                ),
+                singleLine = true
+            )
+        }
+    }
+}
+
+@Composable
+fun ConversionResultsList(
+    amount: String,
+    fromRate: ExchangeRate,
+    allRates: List<ExchangeRate>,
+    selectedFromCode: String
+) {
+    val numericAmount = remember(amount) { amount.toDoubleOrNull() ?: 0.0 }
+    val amountInCup = remember(numericAmount, fromRate.median) { numericAmount * fromRate.median }
+    
+    Column(
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        modifier = Modifier.padding(bottom = 100.dp)
+    ) {
+        allRates.filter { it.code != selectedFromCode }
+            .sortedByDescending { it.code == "CUP" }
+            .forEach { rate ->
+                val convertedValue = remember(amountInCup, rate.median) {
+                    if (rate.median != 0.0) amountInCup / rate.median else 0.0
+                }
                 ConversionResultRow(
                     code = rate.code,
                     value = convertedValue,
                     name = rate.name
                 )
             }
-        }
     }
 }
-
 
 @Composable
 fun ConversionResultRow(code: String, value: Double, name: String) {
@@ -258,4 +293,3 @@ fun ConversionResultRow(code: String, value: Double, name: String) {
         }
     }
 }
-

@@ -1,82 +1,34 @@
 package com.aewaredev.cambioactual.ui.navigation
 
-import android.app.Application
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AccountBalance
 import androidx.compose.material.icons.rounded.Calculate
 import androidx.compose.material.icons.rounded.CurrencyBitcoin
-import androidx.compose.material.icons.rounded.Sms
+import androidx.compose.material.icons.rounded.Storefront
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.ui.NavDisplay
-import androidx.room.Room
-import com.aewaredev.cambioactual.data.api.NetworkModule
-import com.aewaredev.cambioactual.data.local.AppDatabase
-import com.aewaredev.cambioactual.data.repository.ExchangeRepositoryImpl
 import com.aewaredev.cambioactual.ui.components.LoadingDialog
 import com.aewaredev.cambioactual.ui.components.UpdateDialog
-import com.aewaredev.cambioactual.ui.screens.ConverterScreen
-import com.aewaredev.cambioactual.ui.screens.CryptoScreen
-import com.aewaredev.cambioactual.ui.screens.MarketScreen
-import com.aewaredev.cambioactual.ui.screens.SMSScreen
-import com.aewaredev.cambioactual.ui.theme.CambioActualTheme
-import com.aewaredev.cambioactual.ui.viewmodel.ExchangeViewModel
-
-import com.aewaredev.cambioactual.data.repository.*
-import com.aewaredev.cambioactual.data.preferences.TokenManager
-import com.aewaredev.cambioactual.ui.viewmodel.*
 import com.aewaredev.cambioactual.ui.screens.*
-import androidx.compose.material.icons.rounded.Storefront
+import com.aewaredev.cambioactual.ui.theme.CambioActualTheme
+import com.aewaredev.cambioactual.ui.viewmodel.*
 
 @Composable
 fun NavApp(modifier: Modifier = Modifier) {
-    val context = LocalContext.current
-    
-    val database = remember { AppDatabase.getInstance(context) }
-    val tokenManager = remember { TokenManager(context) }
-    
-    val backendApi = remember { NetworkModule.provideBackendApi(context) }
-
-    val exchangeViewModel: ExchangeViewModel = viewModel {
-        ExchangeViewModel(
-            context.applicationContext as Application,
-            ExchangeRepositoryImpl(
-                NetworkModule.udyatApi, 
-                NetworkModule.updateApi, 
-                database.rateDao(),
-                database.smsDao()
-            )
-        )
-    }
-
-    val authViewModel: AuthViewModel = viewModel {
-        AuthViewModel(AuthRepositoryImpl(backendApi, tokenManager))
-    }
-
-    val marketplaceViewModel: MarketplaceViewModel = viewModel {
-        MarketplaceViewModel(MarketplaceRepositoryImpl(backendApi))
-    }
-
-    val profileViewModel: ProfileViewModel = viewModel {
-        ProfileViewModel(UserRepositoryImpl(backendApi))
-    }
-
-    val ratingViewModel: RatingViewModel = viewModel {
-        RatingViewModel(RatingRepositoryImpl(backendApi))
-    }
-
-    val verificationViewModel: VerificationViewModel = viewModel {
-        VerificationViewModel(VerificationRepositoryImpl(backendApi))
-    }
+    val exchangeViewModel: ExchangeViewModel = hiltViewModel()
+    val authViewModel: AuthViewModel = hiltViewModel()
+    val marketplaceViewModel: MarketplaceViewModel = hiltViewModel()
+    val profileViewModel: ProfileViewModel = hiltViewModel()
+    val ratingViewModel: RatingViewModel = hiltViewModel()
+    val verificationViewModel: VerificationViewModel = hiltViewModel()
 
     val isDarkTheme by exchangeViewModel.isDarkTheme.collectAsState()
     val updateInfo by exchangeViewModel.updateInfo.collectAsState()
@@ -94,86 +46,31 @@ fun NavApp(modifier: Modifier = Modifier) {
                 ) {
                     val currentKey = backStack.lastOrNull()
                     
-                    NavigationBarItem(
-                        selected = currentKey is Destination.Market,
-                        onClick = { 
-                            backStack.clear()
-                            backStack.add(Destination.Market)
-                        },
-                        icon = { Icon(Icons.Rounded.AccountBalance, contentDescription = "Cambio") },
-                        label = { Text("Cambio") },
-                        colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = MaterialTheme.colorScheme.primary,
-                            selectedTextColor = MaterialTheme.colorScheme.primary,
-                            unselectedIconColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f),
-                            unselectedTextColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f),
-                            indicatorColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
-                        )
+                    val items = listOf(
+                        NavigationItem(Destination.Market, Icons.Rounded.AccountBalance, "Cambio"),
+                        NavigationItem(Destination.Crypto, Icons.Rounded.CurrencyBitcoin, "Cripto"),
+                        NavigationItem(Destination.Marketplace, Icons.Rounded.Storefront, "Market"),
+                        NavigationItem(Destination.Converter, Icons.Rounded.Calculate, "Convertidor")
                     )
-                    NavigationBarItem(
-                        selected = currentKey is Destination.Crypto,
-                        onClick = { 
-                            backStack.clear()
-                            backStack.add(Destination.Crypto)
-                        },
-                        icon = { Icon(Icons.Rounded.CurrencyBitcoin, contentDescription = "Cripto") },
-                        label = { Text("Cripto") },
-                        colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = MaterialTheme.colorScheme.primary,
-                            selectedTextColor = MaterialTheme.colorScheme.primary,
-                            unselectedIconColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f),
-                            unselectedTextColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f),
-                            indicatorColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
+
+                    items.forEach { item ->
+                        NavigationBarItem(
+                            selected = currentKey?.let { isSameDestination(it, item.destination) } ?: false,
+                            onClick = { 
+                                backStack.clear()
+                                backStack.add(item.destination)
+                            },
+                            icon = { Icon(item.icon, contentDescription = item.label) },
+                            label = { Text(item.label) },
+                            colors = NavigationBarItemDefaults.colors(
+                                selectedIconColor = MaterialTheme.colorScheme.primary,
+                                selectedTextColor = MaterialTheme.colorScheme.primary,
+                                unselectedIconColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f),
+                                unselectedTextColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f),
+                                indicatorColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
+                            )
                         )
-                    )
-                    NavigationBarItem(
-                        selected = currentKey is Destination.Marketplace,
-                        onClick = { 
-                            backStack.clear()
-                            backStack.add(Destination.Marketplace)
-                        },
-                        icon = { Icon(Icons.Rounded.Storefront, contentDescription = "Marketplace") },
-                        label = { Text("Market") },
-                        colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = MaterialTheme.colorScheme.primary,
-                            selectedTextColor = MaterialTheme.colorScheme.primary,
-                            unselectedIconColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f),
-                            unselectedTextColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f),
-                            indicatorColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
-                        )
-                    )
-                    NavigationBarItem(
-                        selected = currentKey is Destination.Converter,
-                        onClick = {
-                            backStack.clear()
-                            backStack.add(Destination.Converter)
-                        },
-                        icon = { Icon(Icons.Rounded.Calculate, contentDescription = "Convertidor") },
-                        label = { Text("Convertidor") },
-                        colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = MaterialTheme.colorScheme.primary,
-                            selectedTextColor = MaterialTheme.colorScheme.primary,
-                            unselectedIconColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f),
-                            unselectedTextColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f),
-                            indicatorColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
-                        )
-                    )
-                    /*NavigationBarItem(
-                        selected = currentKey is Destination.SMS,
-                        onClick = {
-                            backStack.clear()
-                            backStack.add(Destination.SMS)
-                        },
-                        icon = { Icon(Icons.Rounded.Sms, contentDescription = "SMS") },
-                        label = { Text("SMS") },
-                        colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = MaterialTheme.colorScheme.primary,
-                            selectedTextColor = MaterialTheme.colorScheme.primary,
-                            unselectedIconColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f),
-                            unselectedTextColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f),
-                            indicatorColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
-                        )
-                    )*/
+                    }
                 }
             },
             containerColor = MaterialTheme.colorScheme.background
@@ -183,7 +80,7 @@ fun NavApp(modifier: Modifier = Modifier) {
                     .fillMaxSize()
                     .background(MaterialTheme.colorScheme.background)
             ) {
-                    NavDisplay(
+                NavDisplay(
                     backStack = backStack,
                     modifier = modifier.padding(innerPadding),
                     entryProvider = { key ->
@@ -310,5 +207,23 @@ fun NavApp(modifier: Modifier = Modifier) {
                 }
             }
         }
+    }
+}
+
+private data class NavigationItem(
+    val destination: Destination,
+    val icon: androidx.compose.ui.graphics.vector.ImageVector,
+    val label: String
+)
+
+private fun isSameDestination(current: Destination, target: Destination): Boolean {
+    return when (target) {
+        Destination.Market -> current is Destination.Market
+        Destination.Crypto -> current is Destination.Crypto
+        Destination.Marketplace -> current is Destination.Marketplace
+        Destination.Converter -> current is Destination.Converter
+        Destination.SMS -> current is Destination.SMS
+        Destination.Profile -> current is Destination.Profile
+        else -> false
     }
 }

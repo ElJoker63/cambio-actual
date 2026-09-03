@@ -11,7 +11,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 
-class VerificationViewModel(private val repository: VerificationRepository) : ViewModel() {
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
+
+@HiltViewModel
+class VerificationViewModel @Inject constructor(private val repository: VerificationRepository) : ViewModel() {
 
     private val _statusState = MutableStateFlow<UiState<VerificationStatus>>(UiState.Idle)
     val statusState: StateFlow<UiState<VerificationStatus>> = _statusState

@@ -24,9 +24,15 @@ import java.net.HttpURLConnection
 import java.net.URL
 import java.util.Calendar
 
-class ExchangeViewModel(
+import com.aewaredev.cambioactual.util.UpdateManager
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
+
+@HiltViewModel
+class ExchangeViewModel @Inject constructor(
     application: Application,
-    private val repository: ExchangeRepository
+    private val repository: ExchangeRepository,
+    private val updateManager: UpdateManager
 ) : AndroidViewModel(application) {
 
     private val themePreferences = ThemePreferences(application)
@@ -121,7 +127,7 @@ class ExchangeViewModel(
             val info = repository.checkForUpdate()
             if (info != null) {
                 android.util.Log.d("ExchangeViewModel", "Update info found: v${info.versionName} (${info.versionCode})")
-                if (info.versionCode > getCurrentVersionCode()) {
+                if (info.versionCode > updateManager.getCurrentVersionCode()) {
                     android.util.Log.d("ExchangeViewModel", "New version available!")
                     _updateInfo.value = info
                 } else {
@@ -133,62 +139,12 @@ class ExchangeViewModel(
         }
     }
 
-    private fun getCurrentVersionCode(): Long {
-        val packageInfo = getApplication<Application>().packageManager.getPackageInfo(getApplication<Application>().packageName, 0)
-        return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
-            packageInfo.longVersionCode
-        } else {
-            @Suppress("DEPRECATION")
-            packageInfo.versionCode.toLong()
-        }
-    }
-
     fun downloadAndInstallUpdate(info: UpdateInfo) {
         viewModelScope.launch {
-            _isDownloadingUpdate.value = true
-            val file = withContext(Dispatchers.IO) {
-                downloadFile(info.apkUrl, "update.apk")
-            }
-            _isDownloadingUpdate.value = false
-            if (file != null) {
-                installApk(file)
+            updateManager.downloadAndInstallUpdate(info) { downloading ->
+                _isDownloadingUpdate.value = downloading
             }
         }
-    }
-
-    private fun downloadFile(urlStr: String, fileName: String): File? {
-        return try {
-            val context = getApplication<Application>()
-            val updateDir = File(context.cacheDir, "updates")
-            updateDir.mkdirs()
-            val outputFile = File(updateDir, fileName)
-            
-            val url = URL(urlStr)
-            val connection = url.openConnection() as HttpURLConnection
-            connection.connect()
-            
-            if (connection.responseCode != HttpURLConnection.HTTP_OK) return null
-            
-            connection.inputStream.use { input ->
-                FileOutputStream(outputFile).use { output ->
-                    input.copyTo(output)
-                }
-            }
-            outputFile
-        } catch (e: Exception) {
-            null
-        }
-    }
-
-    private fun installApk(file: File) {
-        val context = getApplication<Application>()
-        val apkUri = FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file)
-        val intent = Intent(Intent.ACTION_VIEW).apply {
-            setDataAndType(apkUri, "application/vnd.android.package-archive")
-            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        }
-        context.startActivity(intent)
     }
 
     fun toggleTheme() {
